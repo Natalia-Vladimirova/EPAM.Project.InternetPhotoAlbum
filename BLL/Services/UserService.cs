@@ -1,33 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BLL.Interfaces.Entities;
 using BLL.Interfaces.Services;
+using BLL.Mappers;
+using DAL.Interfaces.Repositories;
 
 namespace BLL.Services
 {
     public class UserService : IUserService
     {
+        private readonly IUnitOfWork uow;
+        private readonly IUserRepository repository;
+
+        public UserService(IUnitOfWork uow, IUserRepository repository)
+        {
+            this.uow = uow;
+            this.repository = repository;
+        }
+
         public void CreateUser(UserEntity user)
         {
-            throw new NotImplementedException();
+            repository.Create(user.ToDalUser());
+            uow.Commit();
         }
 
         public void DeleteUser(UserEntity user)
         {
-            throw new NotImplementedException();
+            repository.Delete(user.ToDalUser());
+            uow.Commit();
         }
 
         public IEnumerable<UserEntity> GetAllUserEntities()
         {
-            throw new NotImplementedException();
+            return repository.GetAll().Select(user => user.ToBllUser());
         }
 
         public UserEntity GetUserEntity(int id)
         {
-            throw new NotImplementedException();
+            return repository.GetById(id)?.ToBllUser();
+        }
+
+        public UserEntity GetUserEntityByLogin(string login)
+        {
+            return repository.GetByLogin(login)?.ToBllUser();
+        }
+
+        public void UpdateUser(UserEntity user)
+        {
+            repository.Update(user.ToDalUser());
+            uow.Commit();
         }
     }
 }

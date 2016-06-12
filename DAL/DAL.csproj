@@ -54,6 +54,7 @@
     <Compile Include="Mappers\DalRoleMappers.cs" />
     <Compile Include="Mappers\DalUserMappers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="Repositories\UnitOfWork.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>

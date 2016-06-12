@@ -5,7 +5,7 @@ namespace DAL.Mappers
 {
     public static class DalRatingMappers
     {
-        public static Rating ToBllRating(this DalRating dalRating)
+        public static Rating ToOrmRating(this DalRating dalRating)
         {
             return new Rating()
             {
@@ -16,12 +16,12 @@ namespace DAL.Mappers
             };
         }
 
-        public static DalRating ToBllRating(this Rating rating)
+        public static DalRating ToDalRating(this Rating rating)
         {
             return new DalRating()
             {
                 Id = rating.RatingId,
-                UserId = rating.UserId,
+                UserId = rating.UserId ?? 0,
                 PhotoId = rating.PhotoId,
                 UserRate = rating.UserRate
             };

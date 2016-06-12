@@ -8,10 +8,10 @@ namespace DAL.Interfaces.Repositories
     public interface IRepository<TEntity> where TEntity : IEntity
     {
         IEnumerable<TEntity> GetAll();
-        TEntity GetById(int key);
+        TEntity GetById(int id);
         TEntity GetByPredicate(Expression<Func<TEntity, bool>> f);
-        void Create(TEntity e);
-        void Delete(TEntity e);
+        void Create(TEntity entity);
+        void Delete(TEntity entity);
         void Update(TEntity entity);
     }
 }

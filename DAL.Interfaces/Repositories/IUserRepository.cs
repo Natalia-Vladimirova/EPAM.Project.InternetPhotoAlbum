@@ -2,7 +2,8 @@
 
 namespace DAL.Interfaces.Repositories
 {
-    public interface IUserRepository : IRepository<DalUser>//Add user repository methods!
+    public interface IUserRepository : IRepository<DalUser>
     {
+        DalUser GetByLogin(string login);
     }
 }
