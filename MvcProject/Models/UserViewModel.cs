@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace MvcProject.Models
 {
@@ -12,12 +9,15 @@ namespace MvcProject.Models
 
         public string UserName { get; set; }
 
+        [Required(ErrorMessage = "The field can not be empty.")]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
+        [Required(ErrorMessage = "The field can not be empty.")]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Required(ErrorMessage = "The field can not be empty.")]
         [DataType(DataType.Date)]
         [Display(Name = "Birthday")]
         public DateTime DateOfBirth { get; set; }

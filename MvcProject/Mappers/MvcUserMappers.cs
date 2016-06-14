@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using MvcProject.Models;
+﻿using MvcProject.Models;
 using BLL.Interfaces.Entities;
 
 namespace MvcProject.Mappers
@@ -19,6 +15,19 @@ namespace MvcProject.Mappers
                 LastName = userEntity.LastName,
                 DateOfBirth = userEntity.DateOfBirth,
                 UserPhoto = userEntity.UserPhoto
+            };
+        }
+
+        public static UserEntity ToBllUser(this UserViewModel mvcUser)
+        {
+            return new UserEntity()
+            {
+                Id = mvcUser.Id,
+                Login = mvcUser.UserName,
+                FirstName = mvcUser.FirstName,
+                LastName = mvcUser.LastName,
+                DateOfBirth = mvcUser.DateOfBirth,
+                UserPhoto = mvcUser.UserPhoto
             };
         }
     }

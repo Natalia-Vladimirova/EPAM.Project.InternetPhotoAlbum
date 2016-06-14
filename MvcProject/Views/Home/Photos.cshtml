@@ -1,0 +1,176 @@
+﻿@model MvcProject.Models.PhotosViewModel
+
+@{
+    ViewBag.Title = "Photos";
+}
+
+<div class="row form-horizontal">
+    <div class="col-md-6">
+        <h2>@ViewBag.Title</h2>
+        @if (User.Identity.Name == Model.ChosenUser.UserName)
+        {
+            <h5>
+                @Html.ActionLink("Back to profile", "Index/") |
+                @Html.ActionLink("Add photo", "AddPhoto")
+            </h5>
+        }
+        else
+        {
+            <h5>@Html.ActionLink("Back to profile", "Index", new { id = Model.ChosenUser.Id })</h5>
+        }
+    </div>
+    <div class="col-md-6 text-right">
+        <br />
+        <div class="row col-md-12 form-inline">
+            @using (Html.BeginForm("SearchPhotos", "Home", FormMethod.Post))
+            {
+                <div class="form-group"><input type="text" class="form-control" name="photoName" placeholder="Enter photo name ..." /></div>
+                <div class="form-group"><input type="submit" class="btn btn-default" value="Search" /></div>
+                @Html.HiddenFor(model => model.ChosenUser.UserName, new { @id = "userName", @Name = "userName" })
+                @Html.HiddenFor(model => model.CurrentPhoto.Id, new { @id = "currentPhotoId", @Name = "currentPhotoId" })
+            }
+        </div>
+        <div class="row col-md-12">
+            <h5>@Html.ActionLink("Show all photos", "Photos", new { userName = Model.ChosenUser.UserName, currentPhotoId = Model.CurrentPhoto?.Id ?? 0 })</h5>
+        </div>
+    </div>
+</div>
+
+<hr class="col-md-12" />
+
+<div class="row col-md-12 form-horizontal">
+    <div class="col-md-5 form-horizontal">
+        @PhotosList(Model.Photos, Model.ChosenUser.UserName)
+    </div>
+    <div class="col-md-7 form-horizontal">
+        @BigPhoto(Model.CurrentPhoto, Model.CurrentPhotoRatings, Model.ChosenUser.UserName, Model.RatingOfCurrentUser)
+    </div>
+</div>
+
+
+
+@helper PhotosList(IEnumerable<MvcProject.Models.PhotoViewModel> photos, string chosenUserName)
+{
+    if (photos != null)
+    {
+        foreach (var photo in photos)
+        {
+                <div class="form-group">
+                    <div class="col-md-5">
+                        <a href="/Home/Photos/@chosenUserName/@photo.Id">
+                            <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                        </a>
+                    </div>
+                    <div class="col-md-7">
+                        <h4>@photo.Name</h4>
+                        <p>Total rate: @photo.TotalRate</p>
+                    </div>
+                </div>
+        }
+    }
+}
+
+@helper BigPhoto(MvcProject.Models.PhotoViewModel photo, IEnumerable<MvcProject.Models.RatingViewModel> currentPhotoRatings,
+    string chosenUserName, int? ratingOfCurrentUser)
+{
+    if (photo != null)
+    {
+        <div class="form-group">
+            <img style="max-width:100%" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+        </div>
+        <div class="form-group">
+            <h3>@photo.Name</h3>
+        </div>
+        <div class="form-group">
+            <p>@photo.Description</p>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Total rate: @photo.TotalRate</label>
+        </div>
+        <div class="form-group">
+            <div class="form-group col-md-3">
+                <div class="dropdown">
+                    <div data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                        Who rated
+                    </div>
+                    <div class="dropdown-menu">
+                        @UsersWhoRated(currentPhotoRatings)
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <div class="dropdown">
+                    <div data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-star"></span>
+                        Rate this photo
+                    </div>
+                    <div class="dropdown-menu">
+                        @StarsMenu(5, photo.Id, chosenUserName)
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-5">
+                @if (ratingOfCurrentUser == null)
+                {
+                    <p class="text-muted">Your rate: no rating</p>
+                }
+                else
+                {
+                    <div>
+                        <span class="glyphicon glyphicon-ok"></span>
+                        My rate: @ratingOfCurrentUser |
+                        <a href="/Home/RemoveRate/@chosenUserName/@photo.Id">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Remove rate
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    if (User.Identity.Name == chosenUserName)
+    {
+            <div class="form-group">
+                @Html.ActionLink("Edit info", "EditPhoto", new { id = photo.Id }) |
+                @Html.ActionLink("Delete", "DeletePhoto", new { id = photo.Id })
+            </div>
+        }
+    }
+}
+
+@helper UsersWhoRated(IEnumerable<MvcProject.Models.RatingViewModel> ratings)
+{
+foreach (var rating in ratings)
+{
+    if (rating.User != null)
+    {
+            <div class="col-md-12" style="min-width:250px">
+                <span class="glyphicon glyphicon-star"></span>
+                @rating.UserRate
+                <a href="/Home/Index/@rating.User.Id">
+                    @rating.User.FirstName @rating.User.LastName
+                </a>
+            </div>
+    }
+}
+}
+
+@helper StarsMenu(int itemsCount, int currentPhotoId, string chosenUserName)
+{
+    for (int i = 1; i <= itemsCount; i++)
+    {
+            <div class="col-md-12">
+                @RepeatLinkedStars(i, currentPhotoId, chosenUserName)
+            </div>
+    }
+}
+
+@helper RepeatLinkedStars(int count, int currentPhotoId, string chosenUserName)
+{
+    <a href="/Home/Rate/@currentPhotoId/@chosenUserName/@count">
+        @for (int i = 0; i < count; i++)
+        {
+            <span class="glyphicon glyphicon-star-empty"></span>
+        }
+    </a>
+}
