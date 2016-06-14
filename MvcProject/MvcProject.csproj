@@ -154,6 +154,7 @@
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\UserIdComparer.cs" />
     <Compile Include="Mappers\MvcPhotoMappers.cs" />
+    <Compile Include="Mappers\MvcRatingMappers.cs" />
     <Compile Include="Mappers\MvcUserMappers.cs" />
     <Compile Include="Models\PasswordViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
@@ -214,6 +215,7 @@
     <Content Include="Views\Admin\UsersEdit.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
     <Content Include="Views\Admin\DeleteUser.cshtml" />
+    <Content Include="Views\Home\SearchUsers.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

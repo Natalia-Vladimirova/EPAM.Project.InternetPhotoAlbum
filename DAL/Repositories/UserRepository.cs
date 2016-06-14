@@ -29,13 +29,21 @@ namespace DAL.Repositories
             User user = context.Set<User>().FirstOrDefault(u => u.Id == dalUser.Id);
             if (user != null)
             {
+                var ratings = user.Ratings?.ToList();
+                if (ratings != null)
+                {
+                    for (int i = 0; i < ratings.Count; i++)
+                    {
+                        ratings[i].UserId = null;
+                    }
+                }
                 context.Set<User>().Remove(user);
             }
         }
 
         public IEnumerable<DalUser> GetAll()
         {
-            return context.Set<User>().Select(user => user.ToDalUser());
+            return context.Set<User>().AsEnumerable().Select(user => user.ToDalUser());
         }
 
         public DalUser GetById(int id)
@@ -56,12 +64,14 @@ namespace DAL.Repositories
         public void Update(DalUser dalUser)
         {
             User user = context.Set<User>().FirstOrDefault(u => u.Id == dalUser.Id);
-            user.Login = dalUser.Login;
-            user.Password = dalUser.Password;
-            user.FirstName = dalUser.FirstName;
-            user.LastName = dalUser.LastName;
-            user.DateOfBirth = dalUser.DateOfBirth;
-            user.UserPhoto = dalUser.UserPhoto;
+
+            if (user != null)
+            {
+                user.FirstName = dalUser.FirstName;
+                user.LastName = dalUser.LastName;
+                user.DateOfBirth = dalUser.DateOfBirth;
+                user.UserPhoto = dalUser.UserPhoto;
+            }
         }
     }
 }

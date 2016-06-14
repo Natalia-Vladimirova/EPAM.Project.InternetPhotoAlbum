@@ -29,7 +29,7 @@
             @if (User.Identity.Name != Model.UserName)
             {
                 <div class="form-group">
-                    <a href="/Home/Photos/0/@Model.UserName" class="btn btn-default">
+                    <a href="/Home/Photos/@Model.UserName/0" class="btn btn-default">
                         See photo album of @Model.FirstName
                     </a>
                 </div>

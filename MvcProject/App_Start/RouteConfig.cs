@@ -14,6 +14,31 @@ namespace MvcProject
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "Rating",
+                url: "Home/Rate/{userName}/{photoId}/{rating}",
+                defaults: new
+                {
+                    controller = "Home",
+                    action = "Rate",
+                    id = UrlParameter.Optional,
+                    userName = UrlParameter.Optional,
+                    rating = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
+                name: "RemoveRate",
+                url: "Home/RemoveRate/{userName}/{photoId}",
+                defaults: new
+                {
+                    controller = "Home",
+                    action = "RemoveRate",
+                    id = UrlParameter.Optional,
+                    userName = UrlParameter.Optional,
+                }
+            );
+
+            routes.MapRoute(
                 name: "Photos",
                 url: "Home/Photos/{userName}/{currentPhotoId}",
                 defaults: new

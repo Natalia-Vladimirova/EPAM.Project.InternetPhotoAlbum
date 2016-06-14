@@ -55,17 +55,17 @@
     {
         foreach (var photo in photos)
         {
-                <div class="form-group">
-                    <div class="col-md-5">
-                        <a href="/Home/Photos/@chosenUserName/@photo.Id">
-                            <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
-                        </a>
-                    </div>
-                    <div class="col-md-7">
-                        <h4>@photo.Name</h4>
-                        <p>Total rate: @photo.TotalRate</p>
-                    </div>
+            <div class="form-group">
+                <div class="col-md-5">
+                    <a href="/Home/Photos/@chosenUserName/@photo.Id">
+                        <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                    </a>
                 </div>
+                <div class="col-md-7">
+                    <h4>@photo.Name</h4>
+                    <p>Total rate: @photo.TotalRate</p>
+                </div>
+            </div>
         }
     }
 }
@@ -128,8 +128,8 @@
                 }
             </div>
         </div>
-    if (User.Identity.Name == chosenUserName)
-    {
+        if (User.Identity.Name == chosenUserName)
+        {
             <div class="form-group">
                 @Html.ActionLink("Edit info", "EditPhoto", new { id = photo.Id }) |
                 @Html.ActionLink("Delete", "DeletePhoto", new { id = photo.Id })
@@ -140,10 +140,10 @@
 
 @helper UsersWhoRated(IEnumerable<MvcProject.Models.RatingViewModel> ratings)
 {
-foreach (var rating in ratings)
-{
-    if (rating.User != null)
+    foreach (var rating in ratings)
     {
+        if (rating.User != null)
+        {
             <div class="col-md-12" style="min-width:250px">
                 <span class="glyphicon glyphicon-star"></span>
                 @rating.UserRate
@@ -151,23 +151,23 @@ foreach (var rating in ratings)
                     @rating.User.FirstName @rating.User.LastName
                 </a>
             </div>
+        }
     }
-}
 }
 
 @helper StarsMenu(int itemsCount, int currentPhotoId, string chosenUserName)
 {
     for (int i = 1; i <= itemsCount; i++)
     {
-            <div class="col-md-12">
-                @RepeatLinkedStars(i, currentPhotoId, chosenUserName)
-            </div>
+        <div class="col-md-12">
+            @RepeatLinkedStars(i, currentPhotoId, chosenUserName)
+        </div>
     }
 }
 
 @helper RepeatLinkedStars(int count, int currentPhotoId, string chosenUserName)
 {
-    <a href="/Home/Rate/@currentPhotoId/@chosenUserName/@count">
+    <a href="/Home/Rate/@chosenUserName/@currentPhotoId/@count">
         @for (int i = 0; i < count; i++)
         {
             <span class="glyphicon glyphicon-star-empty"></span>

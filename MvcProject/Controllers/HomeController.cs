@@ -100,27 +100,62 @@ namespace MvcProject.Controllers
             }
 
             var photos = photoService.GetUserPhotos(user.Id).Select(ph => ph.ToMvcPhoto());
-            var rating = ratingService.GetPhotoRatings(currentPhotoId)?.Select(r =>
+            var ratings = ratingService.GetPhotoRatings(currentPhotoId)?.Select(r =>
             new RatingViewModel
             {
-                RatingId = r.Id,
+                Id = r.Id,
                 UserRate = r.UserRate,
                 PhotoId = r.PhotoId,
                 UserId = r.UserId,
                 User = userService.GetUserEntity(r.UserId)?.ToMvcUser()
-            }
-            );
+            });
 
             PhotosViewModel photosModel = new PhotosViewModel
             {
                 ChosenUser = user,
                 Photos = photos,
                 CurrentPhoto = photos?.FirstOrDefault(ph => ph.Id == currentPhotoId),
-                CurrentPhotoRatings = rating,
+                CurrentPhotoRatings = ratings,
                 RatingOfCurrentUser = ratingService.GetUserRatingOfPhoto(currentUser.Id, currentPhotoId)?.UserRate
             };
-
             return View(photosModel);
+        }
+
+        public ActionResult SearchPhotos(string photoName, string userName, int currentPhotoId = 0)
+        {
+            UserViewModel currentUser = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
+            UserViewModel user = null;
+
+            if (userName != null)
+            {
+                user = userService.GetUserEntityByLogin(userName)?.ToMvcUser();
+            }
+
+            if (user == null)
+            {
+                user = currentUser;
+            }
+
+            var photos = photoService.GetUserPhotos(user.Id).Where(ph => ph.Name.Contains(photoName.Trim())).Select(ph => ph.ToMvcPhoto());
+            var ratings = ratingService.GetPhotoRatings(currentPhotoId)?.Select(r =>
+            new RatingViewModel
+            {
+                Id = r.Id,
+                UserRate = r.UserRate,
+                PhotoId = r.PhotoId,
+                UserId = r.UserId,
+                User = userService.GetUserEntity(r.UserId)?.ToMvcUser()
+            });
+
+            PhotosViewModel photosModel = new PhotosViewModel()
+            {
+                ChosenUser = user,
+                Photos = photos,
+                CurrentPhoto = photos?.FirstOrDefault(ph => ph.Id == currentPhotoId),
+                CurrentPhotoRatings = ratings,
+                RatingOfCurrentUser = ratingService.GetUserRatingOfPhoto(currentUser.Id, currentPhotoId)?.UserRate
+            };
+            return View("Photos", photosModel);
         }
 
         [HttpGet]
@@ -207,6 +242,78 @@ namespace MvcProject.Controllers
         {
             photoService.DeletePhoto(viewModel.ToBllPhoto());
             return RedirectToAction("Photos");
+        }
+
+        public ActionResult Rate(string userName, int photoId, int rating)
+        {
+            UserViewModel currentUser = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
+            RatingViewModel userRating = ratingService.GetUserRatingOfPhoto(currentUser.Id, photoId)?.ToMvcRating();
+
+            if (userRating == null)
+            {
+                userRating = new RatingViewModel
+                {
+                    PhotoId = photoId,
+                    UserId = currentUser.Id,
+                    UserRate = rating
+                };
+                ratingService.CreateRating(userRating.ToBllRating());
+            }
+            else
+            {
+                userRating.UserRate = rating;
+                ratingService.UpdateRating(userRating.ToBllRating());
+            }
+            return RedirectToAction($"Photos/{userName}/{photoId}");
+        }
+
+        public ActionResult RemoveRate(string userName, int photoId)
+        {
+            UserViewModel currentUser = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
+            RatingViewModel userRating = ratingService.GetUserRatingOfPhoto(currentUser.Id, photoId)?.ToMvcRating();
+
+            if (userRating != null)
+            {
+                ratingService.DeleteRating(userRating.ToBllRating());
+            }
+            return RedirectToAction($"Photos/{userName}/{photoId}");
+        }
+
+        [HttpGet]
+        public ActionResult SearchUsers()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SearchUsers(string firstName, string lastName)
+        {
+            IEnumerable<UserViewModel> foundUsers;
+
+            if (firstName.Trim() == string.Empty && lastName.Trim() == string.Empty)
+            {
+                foundUsers = userService.GetAllUserEntities().Where(u => u.Login != User.Identity.Name).Select(u => u.ToMvcUser());
+            }
+            else if (firstName.Trim() == string.Empty)
+            {
+                foundUsers = userService.GetAllUserEntities()
+                    .Where(u => u.Login != User.Identity.Name && u.LastName.Contains(lastName.Trim()))
+                    .Select(u => u.ToMvcUser());
+            }
+            else if (lastName.Trim() == string.Empty)
+            {
+                foundUsers = userService.GetAllUserEntities()
+                    .Where(u => u.Login != User.Identity.Name && u.FirstName.Contains(firstName.Trim()))
+                    .Select(u => u.ToMvcUser());
+            }
+            else
+            {
+                foundUsers = userService.GetAllUserEntities()
+                    .Where(u => u.Login != User.Identity.Name && u.FirstName.Contains(firstName.Trim()) &&
+                                    u.LastName.Contains(lastName.Trim()))
+                    .Select(u => u.ToMvcUser());
+            }
+            return View(foundUsers);
         }
 
     }
