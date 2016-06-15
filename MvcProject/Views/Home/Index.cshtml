@@ -29,7 +29,7 @@
             @if (User.Identity.Name != Model.UserName)
             {
                 <div class="form-group">
-                    <a href="/Home/Photos/@Model.UserName/0" class="btn btn-default">
+                    <a href="@Url.Action("Photos", new { userName = Model.UserName, page = 1, currentPhotoId = 0 })" class="btn btn-default">
                         See photo album of @Model.FirstName
                     </a>
                 </div>
@@ -41,13 +41,13 @@
             {
                 if (User.IsInRole("admin"))
                 {
-                    <a href="/Admin/UsersEdit">
+                    <a href="@Url.Action("UsersEdit", "Admin")">
                         <span class="glyphicon glyphicon-user"></span>
                         Edit users
                     </a>
                 }
                 <br />
-                <a href="/Home/UserSettings">
+                <a href="@Url.Action("UserSettings")">
                     <span class="glyphicon glyphicon-cog"></span>
                     Settings
                 </a>

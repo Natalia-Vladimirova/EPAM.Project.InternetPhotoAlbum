@@ -24,3 +24,23 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.big-user-photo {
+    max-width: 100%;
+}
+
+.name-overflow-cut {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-who-rated {
+    min-width: 250px;
+}
+
+.btn-gray {
+  color: #ffffff;
+  background-color: #808080;
+  border-color: #808080;
+}

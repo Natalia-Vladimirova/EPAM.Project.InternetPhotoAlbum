@@ -15,7 +15,7 @@ namespace MvcProject
 
             routes.MapRoute(
                 name: "Rating",
-                url: "Home/Rate/{userName}/{photoId}/{rating}",
+                url: "Home/Rate/{userName}/{page}/{photoId}/{rating}",
                 defaults: new
                 {
                     controller = "Home",
@@ -28,7 +28,7 @@ namespace MvcProject
 
             routes.MapRoute(
                 name: "RemoveRate",
-                url: "Home/RemoveRate/{userName}/{photoId}",
+                url: "Home/RemoveRate/{userName}/{page}/{photoId}",
                 defaults: new
                 {
                     controller = "Home",
@@ -40,7 +40,7 @@ namespace MvcProject
 
             routes.MapRoute(
                 name: "Photos",
-                url: "Home/Photos/{userName}/{currentPhotoId}",
+                url: "Home/Photos/{userName}/{page}/{currentPhotoId}",
                 defaults: new
                 {
                     controller = "Home",

@@ -84,7 +84,7 @@ namespace MvcProject.Controllers
             return View(user);
         }
 
-        public ActionResult Photos(string userName, int currentPhotoId = 0)
+        public ActionResult Photos(string userName, int page = 1, int currentPhotoId = 0)
         {
             UserViewModel currentUser = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
             UserViewModel user = null;
@@ -110,13 +110,24 @@ namespace MvcProject.Controllers
                 User = userService.GetEntity(r.UserId)?.ToMvcUser()
             });
 
+            int pageSize = 4;
+            var photosPerCurrentPage = photos.Skip((page - 1) * pageSize).Take(pageSize);
+
+            PageInfo pageInfo = new PageInfo
+            {
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalItems = photos.Count()
+            };
+
             PhotosViewModel photosModel = new PhotosViewModel
             {
                 ChosenUser = user,
-                Photos = photos,
+                Photos = photosPerCurrentPage,//photos,
                 CurrentPhoto = photos?.FirstOrDefault(ph => ph.Id == currentPhotoId),
                 CurrentPhotoRatings = ratings,
-                RatingOfCurrentUser = ratingService.GetUserRatingOfPhoto(currentUser.Id, currentPhotoId)?.UserRate
+                RatingOfCurrentUser = ratingService.GetUserRatingOfPhoto(currentUser.Id, currentPhotoId)?.UserRate,
+                PageInfo = pageInfo
             };
             return View(photosModel);
         }
@@ -159,13 +170,14 @@ namespace MvcProject.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddPhoto()
+        public ActionResult AddPhoto(int page = 1)
         {
+            ViewBag.CurrentPage = page;
             return View();
         }
 
         [HttpPost]
-        public ActionResult AddPhoto(PhotoViewModel viewModel, HttpPostedFileBase uploadImage)
+        public ActionResult AddPhoto(PhotoViewModel viewModel, HttpPostedFileBase uploadImage, int page = 1)
         {
             if (ModelState.IsValid)
             {
@@ -186,13 +198,13 @@ namespace MvcProject.Controllers
                 viewModel.UserId = userService.GetUserEntityByLogin(User.Identity.Name).Id;
                 photoService.CreateEntity(viewModel.ToBllPhoto());
 
-                return RedirectToAction("Photos");
+                return RedirectToAction("Photos", new { page = page });
             }
             return View(viewModel);
         }
 
         [HttpGet]
-        public ActionResult EditPhoto(int id = 0)
+        public ActionResult EditPhoto(int id = 0, int page = 1)
         {
             PhotoViewModel photo = photoService.GetEntity(id).ToMvcPhoto();
 
@@ -200,12 +212,12 @@ namespace MvcProject.Controllers
             {
                 return RedirectToAction("Photos");
             }
-
+            ViewBag.CurrentPage = page;
             return View(photo);
         }
 
         [HttpPost]
-        public ActionResult EditPhoto(PhotoViewModel viewModel)
+        public ActionResult EditPhoto(PhotoViewModel viewModel, int page = 1)
         {
             PhotoViewModel photo = photoService.GetEntity(viewModel.Id).ToMvcPhoto();
 
@@ -219,13 +231,13 @@ namespace MvcProject.Controllers
                 photo.Name = viewModel.Name;
                 photo.Description = viewModel.Description;
                 photoService.UpdateEntity(photo.ToBllPhoto());
-                return RedirectToAction($"Photos/{User.Identity.Name}/{photo.Id}");
+                return RedirectToAction("Photos", new { userName = User.Identity.Name, page = page, currentPhotoId = photo.Id });
             }
             return View(photo);
         }
 
         [HttpGet]
-        public ActionResult DeletePhoto(int id = 0)
+        public ActionResult DeletePhoto(int id = 0, int page = 1)
         {
             PhotoViewModel photo = photoService.GetEntity(id).ToMvcPhoto();
 
@@ -233,18 +245,18 @@ namespace MvcProject.Controllers
             {
                 return RedirectToAction("Photos");
             }
-
+            ViewBag.CurrentPage = page;
             return View(photo);
         }
 
         [HttpPost]
-        public ActionResult DeletePhoto(PhotoViewModel viewModel)
+        public ActionResult DeletePhoto(PhotoViewModel viewModel, int page = 1)
         {
             photoService.DeleteEntity(viewModel.ToBllPhoto());
-            return RedirectToAction("Photos");
+            return RedirectToAction("Photos", new { page = page });
         }
 
-        public ActionResult Rate(string userName, int photoId, int rating)
+        public ActionResult Rate(string userName, int photoId, int rating, int page = 1)
         {
             UserViewModel currentUser = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
             RatingViewModel userRating = ratingService.GetUserRatingOfPhoto(currentUser.Id, photoId)?.ToMvcRating();
@@ -264,10 +276,10 @@ namespace MvcProject.Controllers
                 userRating.UserRate = rating;
                 ratingService.UpdateEntity(userRating.ToBllRating());
             }
-            return RedirectToAction($"Photos/{userName}/{photoId}");
+            return RedirectToAction($"Photos/{userName}/{page}/{photoId}");
         }
 
-        public ActionResult RemoveRate(string userName, int photoId)
+        public ActionResult RemoveRate(string userName, int photoId, int page = 1)
         {
             UserViewModel currentUser = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
             RatingViewModel userRating = ratingService.GetUserRatingOfPhoto(currentUser.Id, photoId)?.ToMvcRating();
@@ -276,7 +288,7 @@ namespace MvcProject.Controllers
             {
                 ratingService.DeleteEntity(userRating.ToBllRating());
             }
-            return RedirectToAction($"Photos/{userName}/{photoId}");
+            return RedirectToAction($"Photos/{userName}/{page}/{photoId}");
         }
 
         [HttpGet]

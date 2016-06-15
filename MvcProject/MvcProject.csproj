@@ -151,11 +151,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Helpers\PagingHelpers.cs" />
+    <Compile Include="Infrastructure\Helpers\RatingHelpers.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\UserIdComparer.cs" />
     <Compile Include="Mappers\MvcPhotoMappers.cs" />
     <Compile Include="Mappers\MvcRatingMappers.cs" />
     <Compile Include="Mappers\MvcUserMappers.cs" />
+    <Compile Include="Models\PageInfo.cs" />
     <Compile Include="Models\PasswordViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\PhotosViewModel.cs" />

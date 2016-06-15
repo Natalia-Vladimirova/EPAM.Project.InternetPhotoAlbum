@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace MvcProject.Models
 {
@@ -12,5 +9,6 @@ namespace MvcProject.Models
         public PhotoViewModel CurrentPhoto { get; set; }
         public IEnumerable<RatingViewModel> CurrentPhotoRatings { get; set; }
         public int? RatingOfCurrentUser { get; set; }
+        public PageInfo PageInfo { get; set; }
     }
 }
