@@ -3,12 +3,8 @@ using BLL.Interfaces.Entities;
 
 namespace BLL.Interfaces.Services
 {
-    public interface IPhotoService
+    public interface IPhotoService : IService<PhotoEntity>
     {
-        PhotoEntity GetPhotoEntity(int id);
         IEnumerable<PhotoEntity> GetUserPhotos(int userId);
-        void CreatePhoto(PhotoEntity photo);
-        void UpdatePhoto(PhotoEntity photo);
-        void DeletePhoto(PhotoEntity photo);
     }
 }

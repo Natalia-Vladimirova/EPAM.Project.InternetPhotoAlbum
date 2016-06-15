@@ -19,13 +19,13 @@ namespace BLL.Services
             this.repository = repository;
         }
 
-        public void CreateUser(UserEntity user)
+        public void CreateEntity(UserEntity user)
         {
             repository.Create(user.ToDalUser());
             uow.Commit();
         }
 
-        public void DeleteUser(UserEntity user)
+        public void DeleteEntity(UserEntity user)
         {
             repository.Delete(user.ToDalUser());
             uow.Commit();
@@ -36,7 +36,7 @@ namespace BLL.Services
             return repository.GetAll().Select(user => user.ToBllUser());
         }
 
-        public UserEntity GetUserEntity(int id)
+        public UserEntity GetEntity(int id)
         {
             return repository.GetById(id)?.ToBllUser();
         }
@@ -46,7 +46,7 @@ namespace BLL.Services
             return repository.GetByLogin(login)?.ToBllUser();
         }
 
-        public void UpdateUser(UserEntity user)
+        public void UpdateEntity(UserEntity user)
         {
             repository.Update(user.ToDalUser());
             uow.Commit();

@@ -18,13 +18,13 @@ namespace BLL.Services
             this.repository = repository;
         }
 
-        public void CreateRating(RatingEntity rating)
+        public void CreateEntity(RatingEntity rating)
         {
             repository.Create(rating.ToDalRating());
             uow.Commit();
         }
 
-        public void DeleteRating(RatingEntity rating)
+        public void DeleteEntity(RatingEntity rating)
         {
             repository.Delete(rating.ToDalRating());
             uow.Commit();
@@ -35,7 +35,7 @@ namespace BLL.Services
             return repository.GetPhotoRatings(photoId)?.Select(rating => rating.ToBllRating());
         }
 
-        public RatingEntity GetRatingEntity(int id)
+        public RatingEntity GetEntity(int id)
         {
             return repository.GetById(id)?.ToBllRating();
         }
@@ -45,7 +45,7 @@ namespace BLL.Services
             return repository.GetUserRatingOfPhoto(userId, photoId)?.ToBllRating();
         }
 
-        public void UpdateRating(RatingEntity rating)
+        public void UpdateEntity(RatingEntity rating)
         {
             repository.Update(rating.ToDalRating());
             uow.Commit();

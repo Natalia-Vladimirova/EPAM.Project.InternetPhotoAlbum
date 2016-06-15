@@ -18,19 +18,19 @@ namespace BLL.Services
             this.repository = repository;
         }
 
-        public void CreatePhoto(PhotoEntity photo)
+        public void CreateEntity(PhotoEntity photo)
         {
             repository.Create(photo.ToDalPhoto());
             uow.Commit();
         }
 
-        public void DeletePhoto(PhotoEntity photo)
+        public void DeleteEntity(PhotoEntity photo)
         {
             repository.Delete(photo.ToDalPhoto());
             uow.Commit();
         }
 
-        public PhotoEntity GetPhotoEntity(int id)
+        public PhotoEntity GetEntity(int id)
         {
             return repository.GetById(id)?.ToBllPhoto();
         }
@@ -40,7 +40,7 @@ namespace BLL.Services
             return repository.GetUserPhotos(userId).Select(photo => photo.ToBllPhoto());
         }
 
-        public void UpdatePhoto(PhotoEntity photo)
+        public void UpdateEntity(PhotoEntity photo)
         {
             repository.Update(photo.ToDalPhoto());
             uow.Commit();

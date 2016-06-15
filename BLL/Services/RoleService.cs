@@ -19,12 +19,12 @@ namespace BLL.Services
             this.repository = repository;
         }
 
-        public void CreateRole(RoleEntity user)
+        public void CreateEntity(RoleEntity user)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteRole(RoleEntity user)
+        public void DeleteEntity(RoleEntity user)
         {
             throw new NotImplementedException();
         }
@@ -34,7 +34,12 @@ namespace BLL.Services
             throw new NotImplementedException();
         }
 
-        public RoleEntity GetRoleEntity(int id)
+        public RoleEntity GetEntity(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateEntity(RoleEntity entity)
         {
             throw new NotImplementedException();
         }

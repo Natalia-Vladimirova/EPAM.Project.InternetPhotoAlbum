@@ -33,7 +33,7 @@ namespace MvcProject.Providers
                 DateOfBirth = DateTime.Now
             };
 
-            UserService.CreateUser(user);
+            UserService.CreateEntity(user);
 
             user = UserService.GetUserEntityByLogin(login);
             RoleService.AddUserEntityToRole(user.Id, "user");

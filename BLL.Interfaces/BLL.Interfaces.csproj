@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\IBllEntity.cs" />
     <Compile Include="Entities\PhotoEntity.cs" />
     <Compile Include="Entities\RatingEntity.cs" />
     <Compile Include="Entities\RoleEntity.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Services\IPhotoService.cs" />
     <Compile Include="Services\IRatingService.cs" />
     <Compile Include="Services\IRoleService.cs" />
+    <Compile Include="Services\IService.cs" />
     <Compile Include="Services\IUserService.cs" />
   </ItemGroup>
   <ItemGroup />

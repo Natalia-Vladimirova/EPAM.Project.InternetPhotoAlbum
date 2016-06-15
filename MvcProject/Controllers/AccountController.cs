@@ -44,7 +44,7 @@ namespace MvcProject.Controllers
                     userEnitity.FirstName = viewModel.FirstName;
                     userEnitity.LastName = viewModel.LastName;
                     userEnitity.DateOfBirth = viewModel.DateOfBirth;
-                    userSerivce.UpdateUser(userEnitity);
+                    userSerivce.UpdateEntity(userEnitity);
 
                     FormsAuthentication.SetAuthCookie(viewModel.Login, false);
 

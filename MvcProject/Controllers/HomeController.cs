@@ -26,7 +26,7 @@ namespace MvcProject.Controllers
 
         public ActionResult Index(int id = 0)
         {
-            UserViewModel user = userService.GetUserEntity(id)?.ToMvcUser();
+            UserViewModel user = userService.GetEntity(id)?.ToMvcUser();
 
             if (user == null)
             {
@@ -77,7 +77,7 @@ namespace MvcProject.Controllers
                 {
                     user.UserPhoto = null;
                 }
-                userService.UpdateUser(user.ToBllUser());
+                userService.UpdateEntity(user.ToBllUser());
 
                 return RedirectToAction("Index");
             }
@@ -107,7 +107,7 @@ namespace MvcProject.Controllers
                 UserRate = r.UserRate,
                 PhotoId = r.PhotoId,
                 UserId = r.UserId,
-                User = userService.GetUserEntity(r.UserId)?.ToMvcUser()
+                User = userService.GetEntity(r.UserId)?.ToMvcUser()
             });
 
             PhotosViewModel photosModel = new PhotosViewModel
@@ -144,7 +144,7 @@ namespace MvcProject.Controllers
                 UserRate = r.UserRate,
                 PhotoId = r.PhotoId,
                 UserId = r.UserId,
-                User = userService.GetUserEntity(r.UserId)?.ToMvcUser()
+                User = userService.GetEntity(r.UserId)?.ToMvcUser()
             });
 
             PhotosViewModel photosModel = new PhotosViewModel()
@@ -184,7 +184,7 @@ namespace MvcProject.Controllers
                 viewModel.Image = imageData;
                 viewModel.CreationDate = DateTime.Now;
                 viewModel.UserId = userService.GetUserEntityByLogin(User.Identity.Name).Id;
-                photoService.CreatePhoto(viewModel.ToBllPhoto());
+                photoService.CreateEntity(viewModel.ToBllPhoto());
 
                 return RedirectToAction("Photos");
             }
@@ -194,7 +194,7 @@ namespace MvcProject.Controllers
         [HttpGet]
         public ActionResult EditPhoto(int id = 0)
         {
-            PhotoViewModel photo = photoService.GetPhotoEntity(id).ToMvcPhoto();
+            PhotoViewModel photo = photoService.GetEntity(id).ToMvcPhoto();
 
             if (photo == null)
             {
@@ -207,7 +207,7 @@ namespace MvcProject.Controllers
         [HttpPost]
         public ActionResult EditPhoto(PhotoViewModel viewModel)
         {
-            PhotoViewModel photo = photoService.GetPhotoEntity(viewModel.Id).ToMvcPhoto();
+            PhotoViewModel photo = photoService.GetEntity(viewModel.Id).ToMvcPhoto();
 
             if (photo == null)
             {
@@ -218,7 +218,7 @@ namespace MvcProject.Controllers
             {
                 photo.Name = viewModel.Name;
                 photo.Description = viewModel.Description;
-                photoService.UpdatePhoto(photo.ToBllPhoto());
+                photoService.UpdateEntity(photo.ToBllPhoto());
                 return RedirectToAction($"Photos/{User.Identity.Name}/{photo.Id}");
             }
             return View(photo);
@@ -227,7 +227,7 @@ namespace MvcProject.Controllers
         [HttpGet]
         public ActionResult DeletePhoto(int id = 0)
         {
-            PhotoViewModel photo = photoService.GetPhotoEntity(id).ToMvcPhoto();
+            PhotoViewModel photo = photoService.GetEntity(id).ToMvcPhoto();
 
             if (photo == null)
             {
@@ -240,7 +240,7 @@ namespace MvcProject.Controllers
         [HttpPost]
         public ActionResult DeletePhoto(PhotoViewModel viewModel)
         {
-            photoService.DeletePhoto(viewModel.ToBllPhoto());
+            photoService.DeleteEntity(viewModel.ToBllPhoto());
             return RedirectToAction("Photos");
         }
 
@@ -257,12 +257,12 @@ namespace MvcProject.Controllers
                     UserId = currentUser.Id,
                     UserRate = rating
                 };
-                ratingService.CreateRating(userRating.ToBllRating());
+                ratingService.CreateEntity(userRating.ToBllRating());
             }
             else
             {
                 userRating.UserRate = rating;
-                ratingService.UpdateRating(userRating.ToBllRating());
+                ratingService.UpdateEntity(userRating.ToBllRating());
             }
             return RedirectToAction($"Photos/{userName}/{photoId}");
         }
@@ -274,7 +274,7 @@ namespace MvcProject.Controllers
 
             if (userRating != null)
             {
-                ratingService.DeleteRating(userRating.ToBllRating());
+                ratingService.DeleteEntity(userRating.ToBllRating());
             }
             return RedirectToAction($"Photos/{userName}/{photoId}");
         }

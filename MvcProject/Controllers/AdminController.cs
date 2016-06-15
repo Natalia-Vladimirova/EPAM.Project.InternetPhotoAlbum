@@ -31,7 +31,7 @@ namespace MvcProject.Controllers
         [HttpGet]
         public ActionResult EditUser(int id = 0)
         {
-            UserViewModel user = userService.GetUserEntity(id)?.ToMvcUser();
+            UserViewModel user = userService.GetEntity(id)?.ToMvcUser();
 
             if (user == null)
             {
@@ -43,7 +43,7 @@ namespace MvcProject.Controllers
         [HttpPost]
         public ActionResult EditUser(UserViewModel viewModel)
         {
-            UserViewModel user = userService.GetUserEntity(viewModel.Id)?.ToMvcUser();
+            UserViewModel user = userService.GetEntity(viewModel.Id)?.ToMvcUser();
 
             if (user == null)
             {
@@ -55,7 +55,7 @@ namespace MvcProject.Controllers
                 user.FirstName = viewModel.FirstName;
                 user.LastName = viewModel.LastName;
                 user.DateOfBirth = viewModel.DateOfBirth;
-                userService.UpdateUser(user.ToBllUser());
+                userService.UpdateEntity(user.ToBllUser());
                 return RedirectToAction("UsersEdit");
             }
             return View(user);
@@ -64,7 +64,7 @@ namespace MvcProject.Controllers
         [HttpGet]
         public ActionResult DeleteUser(int id = 0)
         {
-            UserViewModel user = userService.GetUserEntity(id)?.ToMvcUser();
+            UserViewModel user = userService.GetEntity(id)?.ToMvcUser();
 
             if (user == null)
             {
@@ -76,7 +76,7 @@ namespace MvcProject.Controllers
         [HttpPost]
         public ActionResult DeleteUser(UserViewModel viewModel)
         {
-            userService.DeleteUser(viewModel.ToBllUser());
+            userService.DeleteEntity(viewModel.ToBllUser());
             return RedirectToAction("UsersEdit");
         }
 
