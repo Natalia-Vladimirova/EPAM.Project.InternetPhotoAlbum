@@ -12,7 +12,7 @@
         {
             <h5>
                 @Html.ActionLink("Back to profile", "Index/") |
-                @Html.ActionLink("Add photo", "AddPhoto", new { page = Model.PageInfo.PageNumber })
+                @Html.ActionLink("Add photo", "AddPhoto", new { page = Model.PageInfo?.PageNumber })
             </h5>
         }
         else
@@ -25,16 +25,21 @@
         <div class="row col-md-12 form-inline">
             @using (Html.BeginForm("SearchPhotos", "Home", FormMethod.Post))
             {
-                <div class="form-group"><input type="text" class="form-control" name="photoName" placeholder="Enter photo name ..." /></div>
-                <div class="form-group"><input type="submit" class="btn btn-default" value="Search" /></div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="photoName" value="@ViewBag.PhotoName" placeholder="Enter photo name ..." />
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-default" value="Search" />
+                </div>
                 @Html.HiddenFor(model => model.ChosenUser.UserName, new { @id = "userName", @Name = "userName" })
                 @Html.HiddenFor(model => model.CurrentPhoto.Id, new { @id = "currentPhotoId", @Name = "currentPhotoId" })
+                @Html.Hidden("photoName", (string)ViewBag.PhotoName)
             }
         </div>
         <div class="row col-md-12">
             <h5>
                 @Html.ActionLink("Show all photos", "Photos", 
-               new { userName = Model.ChosenUser.UserName, page = Model.PageInfo.PageNumber, currentPhotoId = Model.CurrentPhoto?.Id ?? 0 })
+               new { userName = Model.ChosenUser.UserName, page = 1, currentPhotoId = Model.CurrentPhoto?.Id ?? 0 })
             </h5>
         </div>
     </div>
@@ -44,13 +49,32 @@
 
 <div class="row col-md-12 form-horizontal">
     <div class="row col-md-12 form-group">
-        @PhotosList(Model.Photos, Model.ChosenUser.UserName, Model.PageInfo.PageNumber)
+        @PhotosList(Model.Photos, Model.ChosenUser.UserName, Model.PageInfo?.PageNumber ?? 0)
     </div>
     <br />
     <div class="row col-md-12">
         <div class="btn-group">
-            @Html.PageLinks(Model.PageInfo, x => Url.Action("Photos", 
-           new { userName = Model.ChosenUser.UserName, page = x, currentPhotoId = Model.CurrentPhoto?.Id ?? 0 }))
+            @if (ViewBag.PhotoName == null || ViewBag.PhotoName == string.Empty)
+            {
+                @Html.PageLinks(Model.PageInfo, x => Url.Action("Photos",
+               new
+               {
+                   userName = Model.ChosenUser.UserName,
+                   page = x,
+                   currentPhotoId = Model.CurrentPhoto?.Id ?? 0,
+               }))
+            }
+            else
+            {
+                @Html.PageLinks(Model.PageInfo, x => Url.Action("SearchPhotos",
+               new
+               {
+                   userName = Model.ChosenUser.UserName,
+                   page = x,
+                   currentPhotoId = Model.CurrentPhoto?.Id ?? 0,
+                   photoName = ViewBag.PhotoName
+               }))
+            }
         </div>
     </div>
     <br />
@@ -140,9 +164,18 @@
         {
             <div class="col-md-3">
                 <div class="col-md-5">
-                    <a href="@Url.Action("Photos", new { userName = chosenUserName, page = page, currentPhotoId = photo.Id })">
-                        <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
-                    </a>
+                    @if (ViewBag.PhotoName == null || ViewBag.PhotoName == string.Empty)
+                    {
+                        <a href="@Url.Action("Photos", new { userName = chosenUserName, page = page, currentPhotoId = photo.Id })">
+                            <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("SearchPhotos", new { userName = chosenUserName, page = page, currentPhotoId = photo.Id, photoName = ViewBag.PhotoName })">
+                            <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                        </a>
+                    }
                 </div>
                 <div class="col-md-7 name-overflow-cut">
                     <h4>@photo.Name</h4>

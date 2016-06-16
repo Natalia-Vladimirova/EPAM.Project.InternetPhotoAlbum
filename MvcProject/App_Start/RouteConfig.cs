@@ -20,8 +20,9 @@ namespace MvcProject
                 {
                     controller = "Home",
                     action = "Rate",
-                    id = UrlParameter.Optional,
                     userName = UrlParameter.Optional,
+                    page = UrlParameter.Optional,
+                    photoId = UrlParameter.Optional,
                     rating = UrlParameter.Optional
                 }
             );
@@ -33,8 +34,23 @@ namespace MvcProject
                 {
                     controller = "Home",
                     action = "RemoveRate",
-                    id = UrlParameter.Optional,
                     userName = UrlParameter.Optional,
+                    page = UrlParameter.Optional,
+                    photoId = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
+                name: "SearchPhotos",
+                url: "Home/SearchPhotos/{userName}/{page}/{currentPhotoId}/{photoName}",
+                defaults: new
+                {
+                    controller = "Home",
+                    action = "SearchPhotos",
+                    userName = UrlParameter.Optional,
+                    page = UrlParameter.Optional,
+                    currentPhotoId = UrlParameter.Optional,
+                    photoName = UrlParameter.Optional
                 }
             );
 
@@ -45,8 +61,9 @@ namespace MvcProject
                 {
                     controller = "Home",
                     action = "Photos",
-                    id = UrlParameter.Optional,
-                    userName = UrlParameter.Optional
+                    userName = UrlParameter.Optional,
+                    page = UrlParameter.Optional,
+                    currentPhotoId = UrlParameter.Optional
                 }
             );
 

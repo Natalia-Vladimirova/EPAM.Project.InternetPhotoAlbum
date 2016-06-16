@@ -84,8 +84,15 @@ namespace MvcProject.Controllers
             return View(user);
         }
 
-        public ActionResult Photos(string userName, int page = 1, int currentPhotoId = 0)
+        public ActionResult Photos(string userName, int page = 1, int currentPhotoId = 0, string photoName = null)
         {
+            if (photoName != null && !string.IsNullOrWhiteSpace(photoName))
+            {
+                return RedirectToAction("SearchPhotos", 
+                    new { photoName = photoName, userName = userName,
+                    page = page, currentPhotoId = currentPhotoId });
+            }
+
             UserViewModel currentUser = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
             UserViewModel user = null;
 
@@ -98,41 +105,12 @@ namespace MvcProject.Controllers
             {
                 user = currentUser;
             }
-
             var photos = photoService.GetUserPhotos(user.Id).Select(ph => ph.ToMvcPhoto());
-            var ratings = ratingService.GetPhotoRatings(currentPhotoId)?.Select(r =>
-            new RatingViewModel
-            {
-                Id = r.Id,
-                UserRate = r.UserRate,
-                PhotoId = r.PhotoId,
-                UserId = r.UserId,
-                User = userService.GetEntity(r.UserId)?.ToMvcUser()
-            });
-
-            int pageSize = 4;
-            var photosPerCurrentPage = photos.Skip((page - 1) * pageSize).Take(pageSize);
-
-            PageInfo pageInfo = new PageInfo
-            {
-                PageNumber = page,
-                PageSize = pageSize,
-                TotalItems = photos.Count()
-            };
-
-            PhotosViewModel photosModel = new PhotosViewModel
-            {
-                ChosenUser = user,
-                Photos = photosPerCurrentPage,//photos,
-                CurrentPhoto = photos?.FirstOrDefault(ph => ph.Id == currentPhotoId),
-                CurrentPhotoRatings = ratings,
-                RatingOfCurrentUser = ratingService.GetUserRatingOfPhoto(currentUser.Id, currentPhotoId)?.UserRate,
-                PageInfo = pageInfo
-            };
+            var photosModel = GetCurrentPhotosModel(user, photos, currentUser.Id, currentPhotoId, page);
             return View(photosModel);
         }
 
-        public ActionResult SearchPhotos(string photoName, string userName, int currentPhotoId = 0)
+        public ActionResult SearchPhotos(string photoName, string userName, int page = 1, int currentPhotoId = 0)
         {
             UserViewModel currentUser = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
             UserViewModel user = null;
@@ -147,25 +125,13 @@ namespace MvcProject.Controllers
                 user = currentUser;
             }
 
-            var photos = photoService.GetUserPhotos(user.Id).Where(ph => ph.Name.Contains(photoName.Trim())).Select(ph => ph.ToMvcPhoto());
-            var ratings = ratingService.GetPhotoRatings(currentPhotoId)?.Select(r =>
-            new RatingViewModel
-            {
-                Id = r.Id,
-                UserRate = r.UserRate,
-                PhotoId = r.PhotoId,
-                UserId = r.UserId,
-                User = userService.GetEntity(r.UserId)?.ToMvcUser()
-            });
+            var photos = photoService.GetUserPhotos(user.Id)
+                .Where(ph => ph.Name.IndexOf(photoName?.Trim() ?? "",StringComparison.InvariantCultureIgnoreCase) >= 0)
+                .Select(ph => ph.ToMvcPhoto());
 
-            PhotosViewModel photosModel = new PhotosViewModel()
-            {
-                ChosenUser = user,
-                Photos = photos,
-                CurrentPhoto = photos?.FirstOrDefault(ph => ph.Id == currentPhotoId),
-                CurrentPhotoRatings = ratings,
-                RatingOfCurrentUser = ratingService.GetUserRatingOfPhoto(currentUser.Id, currentPhotoId)?.UserRate
-            };
+            var photosModel = GetCurrentPhotosModel(user, photos, currentUser.Id, currentPhotoId, page);
+
+            ViewBag.PhotoName = photoName ?? string.Empty;
             return View("Photos", photosModel);
         }
 
@@ -325,7 +291,42 @@ namespace MvcProject.Controllers
                                     u.LastName.Contains(lastName.Trim()))
                     .Select(u => u.ToMvcUser());
             }
+
             return View(foundUsers);
+        }
+
+        private PhotosViewModel GetCurrentPhotosModel(UserViewModel user, IEnumerable<PhotoViewModel> photos,
+            int currentUserId, int currentPhotoId, int page)
+        {
+            var ratings = ratingService.GetPhotoRatings(currentPhotoId)?.Select(r =>
+            new RatingViewModel
+            {
+                Id = r.Id,
+                UserRate = r.UserRate,
+                PhotoId = r.PhotoId,
+                UserId = r.UserId,
+                User = userService.GetEntity(r.UserId)?.ToMvcUser()
+            });
+
+            int pageSize = 4;
+            var photosPerCurrentPage = photos.Skip((page - 1) * pageSize).Take(pageSize);
+
+            PageInfo pageInfo = new PageInfo
+            {
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalItems = photos.Count()
+            };
+
+            return new PhotosViewModel
+            {
+                ChosenUser = user,
+                Photos = photosPerCurrentPage,
+                CurrentPhoto = photos?.FirstOrDefault(ph => ph.Id == currentPhotoId),
+                CurrentPhotoRatings = ratings,
+                RatingOfCurrentUser = ratingService.GetUserRatingOfPhoto(currentUserId, currentPhotoId)?.UserRate,
+                PageInfo = pageInfo
+            };
         }
 
     }

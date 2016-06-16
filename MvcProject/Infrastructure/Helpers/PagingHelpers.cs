@@ -9,6 +9,8 @@ namespace MvcProject.Infrastructure.Helpers
     {
         public static MvcHtmlString PageLinks(this HtmlHelper html, PageInfo pageInfo, Func<int, string> pageUrl)
         {
+            if (pageInfo == null || pageUrl == null) { return null; }
+
             StringBuilder result = new StringBuilder();
             for (int i = 1; i <= pageInfo.TotalPages; i++)
             {
