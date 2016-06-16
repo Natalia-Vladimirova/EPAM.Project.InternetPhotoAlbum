@@ -61,6 +61,24 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
+        public IEnumerable<DalUser> GetUsersByFirstName(string firstName)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                return GetAll();
+            }
+            return context.Set<User>().Where(u => u.FirstName.Contains(firstName)).ToList().Select(u => u.ToDalUser());
+        }
+
+        public IEnumerable<DalUser> GetUsersByLastName(string lastName)
+        {
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                return GetAll();
+            }
+            return context.Set<User>().Where(u => u.LastName.Contains(lastName)).ToList().Select(u => u.ToDalUser());
+        }
+
         public void Update(DalUser dalUser)
         {
             User user = context.Set<User>().FirstOrDefault(u => u.Id == dalUser.Id);
@@ -73,5 +91,6 @@ namespace DAL.Repositories
                 user.UserPhoto = dalUser.UserPhoto;
             }
         }
+
     }
 }

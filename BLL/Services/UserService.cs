@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BLL.Interfaces.Entities;
 using BLL.Interfaces.Services;
@@ -50,6 +49,16 @@ namespace BLL.Services
         {
             repository.Update(user.ToDalUser());
             uow.Commit();
+        }
+
+        public IEnumerable<UserEntity> GetUserEntitiesByFirstName(string firstName)
+        {
+            return repository.GetUsersByFirstName(firstName).Select(u => u.ToBllUser());
+        }
+
+        public IEnumerable<UserEntity> GetUserEntitiesByLastName(string lastName)
+        {
+            return repository.GetUsersByLastName(lastName).Select(u => u.ToBllUser());
         }
     }
 }

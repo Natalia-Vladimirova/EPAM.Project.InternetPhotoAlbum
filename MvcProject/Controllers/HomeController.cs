@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using MvcProject.Infrastructure;
 using MvcProject.Models;
 using MvcProject.Mappers;
 using BLL.Interfaces.Services;
@@ -86,7 +87,7 @@ namespace MvcProject.Controllers
 
         public ActionResult Photos(string userName, int page = 1, int currentPhotoId = 0, string photoName = null)
         {
-            if (photoName != null && !string.IsNullOrWhiteSpace(photoName))
+            if (!string.IsNullOrWhiteSpace(photoName))
             {
                 return RedirectToAction("SearchPhotos", 
                     new { photoName = photoName, userName = userName,
@@ -126,7 +127,7 @@ namespace MvcProject.Controllers
             }
 
             var photos = photoService.GetUserPhotos(user.Id)
-                .Where(ph => ph.Name.IndexOf(photoName?.Trim() ?? "",StringComparison.InvariantCultureIgnoreCase) >= 0)
+                .Where(ph => ph.Name.IndexOf(photoName?.Trim() ?? "", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 .Select(ph => ph.ToMvcPhoto());
 
             var photosModel = GetCurrentPhotosModel(user, photos, currentUser.Id, currentPhotoId, page);
@@ -266,32 +267,15 @@ namespace MvcProject.Controllers
         [HttpPost]
         public ActionResult SearchUsers(string firstName, string lastName)
         {
-            IEnumerable<UserViewModel> foundUsers;
+            var usersByFirstName = userService.GetUserEntitiesByFirstName(firstName).Select(u => u.ToMvcUser());
+            var usersByLastName = userService.GetUserEntitiesByLastName(lastName).Select(u => u.ToMvcUser());
 
-            if (firstName.Trim() == string.Empty && lastName.Trim() == string.Empty)
-            {
-                foundUsers = userService.GetAllUserEntities().Where(u => u.Login != User.Identity.Name).Select(u => u.ToMvcUser());
-            }
-            else if (firstName.Trim() == string.Empty)
-            {
-                foundUsers = userService.GetAllUserEntities()
-                    .Where(u => u.Login != User.Identity.Name && u.LastName.Contains(lastName.Trim()))
-                    .Select(u => u.ToMvcUser());
-            }
-            else if (lastName.Trim() == string.Empty)
-            {
-                foundUsers = userService.GetAllUserEntities()
-                    .Where(u => u.Login != User.Identity.Name && u.FirstName.Contains(firstName.Trim()))
-                    .Select(u => u.ToMvcUser());
-            }
-            else
-            {
-                foundUsers = userService.GetAllUserEntities()
-                    .Where(u => u.Login != User.Identity.Name && u.FirstName.Contains(firstName.Trim()) &&
-                                    u.LastName.Contains(lastName.Trim()))
-                    .Select(u => u.ToMvcUser());
-            }
+            IEnumerable<UserViewModel> foundUsers = usersByFirstName
+                .Intersect(usersByLastName, new UserIdComparer())
+                .Where(u => u.UserName != User.Identity.Name);
 
+            ViewBag.FirstName = firstName;
+            ViewBag.LastName = lastName;
             return View(foundUsers);
         }
 

@@ -7,5 +7,7 @@ namespace BLL.Interfaces.Services
     {
         UserEntity GetUserEntityByLogin(string login);
         IEnumerable<UserEntity> GetAllUserEntities();
+        IEnumerable<UserEntity> GetUserEntitiesByFirstName(string firstName);
+        IEnumerable<UserEntity> GetUserEntitiesByLastName(string lastName);
     }
 }
