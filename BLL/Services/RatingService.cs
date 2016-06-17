@@ -37,12 +37,12 @@ namespace BLL.Services
 
         public RatingEntity GetEntity(int id)
         {
-            return repository.GetById(id)?.ToBllRating();
+            return repository.GetById(id).ToBllRating();
         }
 
         public RatingEntity GetUserRatingOfPhoto(int userId, int photoId)
         {
-            return repository.GetUserRatingOfPhoto(userId, photoId)?.ToBllRating();
+            return repository.GetUserRatingOfPhoto(userId, photoId).ToBllRating();
         }
 
         public void UpdateEntity(RatingEntity rating)

@@ -7,6 +7,8 @@ namespace BLL.Mappers
     {
         public static DalRole ToDalRole(this RoleEntity roleEntity)
         {
+            if (roleEntity == null) return null;
+
             return new DalRole()
             {
                 Id = roleEntity.Id,
@@ -16,6 +18,8 @@ namespace BLL.Mappers
 
         public static RoleEntity ToBllRole(this DalRole dalRole)
         {
+            if (dalRole == null) return null;
+
             return new RoleEntity()
             {
                 Id = dalRole.Id,

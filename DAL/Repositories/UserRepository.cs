@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using DAL.Interfaces.DataTransferObjects;
 using DAL.Interfaces.Repositories;
 using DAL.Mappers;
@@ -48,19 +46,14 @@ namespace DAL.Repositories
 
         public DalUser GetById(int id)
         {
-            return context.Set<User>().FirstOrDefault(user => user.Id == id)?.ToDalUser();
+            return context.Set<User>().FirstOrDefault(user => user.Id == id).ToDalUser();
         }
 
         public DalUser GetByLogin(string login)
         {
-            return context.Set<User>().FirstOrDefault(user => user.Login == login)?.ToDalUser();
+            return context.Set<User>().FirstOrDefault(user => user.Login == login).ToDalUser();
         }
-
-        public DalUser GetByPredicate(Expression<Func<DalUser, bool>> f)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public IEnumerable<DalUser> GetUsersByFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName))

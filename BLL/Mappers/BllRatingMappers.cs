@@ -7,6 +7,8 @@ namespace BLL.Mappers
     {
         public static DalRating ToDalRating(this RatingEntity ratingEntity)
         {
+            if (ratingEntity == null) return null;
+
             return new DalRating()
             {
                 Id = ratingEntity.Id,
@@ -18,6 +20,8 @@ namespace BLL.Mappers
 
         public static RatingEntity ToBllRating(this DalRating dalRating)
         {
+            if (dalRating == null) return null;
+
             return new RatingEntity()
             {
                 Id = dalRating.Id,

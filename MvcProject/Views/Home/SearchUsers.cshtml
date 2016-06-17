@@ -32,7 +32,7 @@
         foreach (var user in users)
         {
             <div class="row">
-                <a href="/Home/Index/@user.Id">
+                <a href="@Url.Action("Index", "Home", new { id = user.Id })">
                     <div class="col-md-2">
                         @if (user.UserPhoto != null)
                         {

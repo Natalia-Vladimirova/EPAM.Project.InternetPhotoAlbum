@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 using System.Web.Helpers;
 using System.Web.Security;
 using BLL.Interfaces.Entities;
 using BLL.Interfaces.Services;
 
-namespace MvcProject.Providers
+namespace MvcProject.Infrastructure.Providers
 {
     public class CustomMembershipProvider : MembershipProvider
     {
@@ -46,7 +43,6 @@ namespace MvcProject.Providers
         {
             var user = UserService.GetUserEntityByLogin(login);
 
-            //Определяет, соответствуют ли заданный хэш RFC 2898 и пароль друг другу
             if (user != null && Crypto.VerifyHashedPassword(user.Password, password))
             {
                 return true;

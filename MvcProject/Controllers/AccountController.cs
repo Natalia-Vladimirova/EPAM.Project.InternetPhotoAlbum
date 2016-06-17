@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
+using MvcProject.Infrastructure.Providers;
 using MvcProject.Models;
-using MvcProject.Providers;
 using BLL.Interfaces.Services;
 
 namespace MvcProject.Controllers

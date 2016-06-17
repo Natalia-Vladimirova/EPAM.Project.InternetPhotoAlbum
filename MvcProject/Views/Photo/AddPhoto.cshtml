@@ -5,13 +5,14 @@
 }
 
 <h2>Add photo</h2>
-<h5>@Html.ActionLink("Back to photos", "Photos", new { page = ViewBag.CurrentPage })</h5>
+<h5>@Html.ActionLink("Back to photos", "Photos", new { page = ViewBag.CurrentPage, photoName = ViewBag.PhotoName })</h5>
 <hr class="col-md-12" />
 
-@using (Html.BeginForm("AddPhoto", "Home", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+@using (Html.BeginForm("AddPhoto", "Photo", FormMethod.Post, new { @enctype = "multipart/form-data" }))
 {
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.Hidden("page", (int?)ViewBag.CurrentPage)
+    @Html.Hidden("photoName", (string)ViewBag.PhotoName)
 
     <div class="form-horizontal">
         <div class="form-group">

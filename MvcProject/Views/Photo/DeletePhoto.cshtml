@@ -13,6 +13,7 @@
 
     @Html.HiddenFor(model => model.Id)
     @Html.Hidden("page", (int?)ViewBag.CurrentPage)
+    @Html.Hidden("photoName", (string)ViewBag.PhotoName)
 
     <div class="form-horizontal">
         <div class="col-md-7 form-horizontal">
@@ -26,8 +27,8 @@
 
             <div class="form-group">
                 <input type="submit" value="Delete photo" class="btn btn-default" />
-                @Html.ActionLink("Cancel", "Photos", 
-               new { userName = User.Identity.Name, page = ViewBag.CurrentPage, currentPhotoId = Model.Id }, 
+                @Html.ActionLink("Cancel", "Photos",
+               new { userName = User.Identity.Name, page = ViewBag.CurrentPage, currentPhotoId = Model.Id, photoName = ViewBag.PhotoName },
                new { @class = "btn btn-default" })
             </div>
         </div>

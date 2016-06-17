@@ -7,6 +7,8 @@ namespace DAL.Mappers
     {
         public static Photo ToOrmPhoto(this DalPhoto dalPhoto)
         {
+            if (dalPhoto == null) return null;
+
             return new Photo()
             {
                 PhotoId = dalPhoto.Id,
@@ -21,6 +23,8 @@ namespace DAL.Mappers
 
         public static DalPhoto ToDalPhoto(this Photo photo)
         {
+            if (photo == null) return null;
+
             return new DalPhoto()
             {
                 Id = photo.PhotoId,

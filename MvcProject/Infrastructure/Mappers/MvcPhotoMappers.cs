@@ -1,12 +1,14 @@
 ﻿using MvcProject.Models;
 using BLL.Interfaces.Entities;
 
-namespace MvcProject.Mappers
+namespace MvcProject.Infrastructure.Mappers
 {
     public static class MvcPhotoMappers
     {
         public static PhotoViewModel ToMvcPhoto(this PhotoEntity photoEntity)
         {
+            if (photoEntity == null) return null;
+
             return new PhotoViewModel()
             {
                 Id = photoEntity.Id,
@@ -21,6 +23,8 @@ namespace MvcProject.Mappers
 
         public static PhotoEntity ToBllPhoto(this PhotoViewModel mvcPhoto)
         {
+            if (mvcPhoto == null) return null;
+
             return new PhotoEntity()
             {
                 Id = mvcPhoto.Id,

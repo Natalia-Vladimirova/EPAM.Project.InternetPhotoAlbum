@@ -14,11 +14,11 @@ namespace MvcProject
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Rating",
-                url: "Home/Rate/{userName}/{page}/{photoId}/{rating}",
+                name: "Rate",
+                url: "Rating/Rate/{userName}/{page}/{photoId}/{rating}",
                 defaults: new
                 {
-                    controller = "Home",
+                    controller = "Rating",
                     action = "Rate",
                     userName = UrlParameter.Optional,
                     page = UrlParameter.Optional,
@@ -29,10 +29,10 @@ namespace MvcProject
 
             routes.MapRoute(
                 name: "RemoveRate",
-                url: "Home/RemoveRate/{userName}/{page}/{photoId}",
+                url: "Rating/RemoveRate/{userName}/{page}/{photoId}",
                 defaults: new
                 {
-                    controller = "Home",
+                    controller = "Rating",
                     action = "RemoveRate",
                     userName = UrlParameter.Optional,
                     page = UrlParameter.Optional,
@@ -42,10 +42,10 @@ namespace MvcProject
 
             routes.MapRoute(
                 name: "SearchPhotos",
-                url: "Home/SearchPhotos/{userName}/{page}/{currentPhotoId}/{photoName}",
+                url: "Photo/SearchPhotos/{userName}/{page}/{currentPhotoId}/{photoName}",
                 defaults: new
                 {
-                    controller = "Home",
+                    controller = "Photo",
                     action = "SearchPhotos",
                     userName = UrlParameter.Optional,
                     page = UrlParameter.Optional,
@@ -56,10 +56,10 @@ namespace MvcProject
 
             routes.MapRoute(
                 name: "Photos",
-                url: "Home/Photos/{userName}/{page}/{currentPhotoId}",
+                url: "Photo/Photos/{userName}/{page}/{currentPhotoId}",
                 defaults: new
                 {
-                    controller = "Home",
+                    controller = "Photo",
                     action = "Photos",
                     userName = UrlParameter.Optional,
                     page = UrlParameter.Optional,

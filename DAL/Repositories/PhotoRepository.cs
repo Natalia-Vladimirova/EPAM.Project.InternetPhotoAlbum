@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using DAL.Interfaces.DataTransferObjects;
 using DAL.Interfaces.Repositories;
 using DAL.Mappers;
@@ -32,22 +30,12 @@ namespace DAL.Repositories
                 context.Set<Photo>().Remove(photo);
             }
         }
-
-        public IEnumerable<DalPhoto> GetAll()
-        {
-            return context.Set<Photo>().Select(photo => photo.ToDalPhoto());
-        }
-
+        
         public DalPhoto GetById(int id)
         {
-            return context.Set<Photo>().FirstOrDefault(photo => photo.PhotoId == id)?.ToDalPhoto();
+            return context.Set<Photo>().FirstOrDefault(photo => photo.PhotoId == id).ToDalPhoto();
         }
-
-        public DalPhoto GetByPredicate(Expression<Func<DalPhoto, bool>> f)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public IEnumerable<DalPhoto> GetUserPhotos(int userId)
         {
             return context.Set<User>().FirstOrDefault(user => user.Id == userId)?.Photos.Select(photo => photo.ToDalPhoto());

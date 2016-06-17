@@ -7,6 +7,8 @@ namespace BLL.Mappers
     {
         public static DalPhoto ToDalPhoto(this PhotoEntity photoEntity)
         {
+            if (photoEntity == null) return null;
+
             return new DalPhoto()
             {
                 Id = photoEntity.Id,
@@ -21,6 +23,8 @@ namespace BLL.Mappers
 
         public static PhotoEntity ToBllPhoto(this DalPhoto dalPhoto)
         {
+            if (dalPhoto == null) return null;
+
             return new PhotoEntity()
             {
                 Id = dalPhoto.Id,

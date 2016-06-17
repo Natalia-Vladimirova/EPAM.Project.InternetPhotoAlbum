@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using DAL.Interfaces.DataTransferObjects;
 using DAL.Interfaces.Repositories;
 using DAL.Mappers;
@@ -29,21 +28,11 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<DalRole> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
         public DalRole GetById(int id)
         {
             throw new NotImplementedException();
         }
-
-        public DalRole GetByPredicate(Expression<Func<DalRole, bool>> f)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public IEnumerable<DalRole> GetUserRoles(int userId)
         {
             return context.Set<User>().FirstOrDefault(user => user.Id == userId)?.Roles.Select(role => role.ToDalRole());

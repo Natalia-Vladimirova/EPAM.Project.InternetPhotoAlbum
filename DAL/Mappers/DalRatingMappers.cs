@@ -7,6 +7,8 @@ namespace DAL.Mappers
     {
         public static Rating ToOrmRating(this DalRating dalRating)
         {
+            if (dalRating == null) return null;
+
             return new Rating()
             {
                 RatingId = dalRating.Id,
@@ -18,6 +20,8 @@ namespace DAL.Mappers
 
         public static DalRating ToDalRating(this Rating rating)
         {
+            if (rating == null) return null;
+
             return new DalRating()
             {
                 Id = rating.RatingId,

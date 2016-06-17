@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Web.Mvc;
 using MvcProject.Infrastructure;
+using MvcProject.Infrastructure.Mappers;
 using MvcProject.Models;
-using MvcProject.Mappers;
 using BLL.Interfaces.Services;
 
 namespace MvcProject.Controllers
@@ -31,7 +31,7 @@ namespace MvcProject.Controllers
         [HttpGet]
         public ActionResult EditUser(int id = 0)
         {
-            UserViewModel user = userService.GetEntity(id)?.ToMvcUser();
+            UserViewModel user = userService.GetEntity(id).ToMvcUser();
 
             if (user == null)
             {
@@ -43,7 +43,7 @@ namespace MvcProject.Controllers
         [HttpPost]
         public ActionResult EditUser(UserViewModel viewModel)
         {
-            UserViewModel user = userService.GetEntity(viewModel.Id)?.ToMvcUser();
+            UserViewModel user = userService.GetEntity(viewModel.Id).ToMvcUser();
 
             if (user == null)
             {
@@ -64,7 +64,7 @@ namespace MvcProject.Controllers
         [HttpGet]
         public ActionResult DeleteUser(int id = 0)
         {
-            UserViewModel user = userService.GetEntity(id)?.ToMvcUser();
+            UserViewModel user = userService.GetEntity(id).ToMvcUser();
 
             if (user == null)
             {

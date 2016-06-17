@@ -11,19 +11,26 @@
         @if (User.Identity.Name == Model.ChosenUser.UserName)
         {
             <h5>
-                @Html.ActionLink("Back to profile", "Index/") |
-                @Html.ActionLink("Add photo", "AddPhoto", new { page = Model.PageInfo?.PageNumber })
+                @Html.ActionLink("Back to profile", $"Index/{Model.ChosenUser.Id}", "Home") |
+                @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+                {
+                    @Html.ActionLink("Add photo", "AddPhoto", new { page = Model.PageInfo?.PageNumber })
+                }
+                else
+                {
+                    @Html.ActionLink("Add photo", "AddPhoto", new { page = Model.PageInfo?.PageNumber, photoName = ViewBag.PhotoName })
+                }
             </h5>
         }
         else
         {
-            <h5>@Html.ActionLink("Back to profile", "Index", new { id = Model.ChosenUser.Id })</h5>
+            <h5>@Html.ActionLink("Back to profile", $"Index/{Model.ChosenUser.Id}", "Home")</h5>
         }
     </div>
     <div class="col-md-6 text-right">
         <br />
         <div class="row col-md-12 form-inline">
-            @using (Html.BeginForm("SearchPhotos", "Home", FormMethod.Post))
+            @using (Html.BeginForm("SearchPhotos", "Photo", FormMethod.Post))
             {
                 <div class="form-group">
                     <input type="text" class="form-control" name="photoName" value="@ViewBag.PhotoName" placeholder="Enter photo name ..." />
@@ -33,7 +40,7 @@
                 </div>
                 @Html.HiddenFor(model => model.ChosenUser.UserName, new { @id = "userName", @Name = "userName" })
                 @Html.HiddenFor(model => model.CurrentPhoto.Id, new { @id = "currentPhotoId", @Name = "currentPhotoId" })
-                @Html.Hidden("photoName", (string)ViewBag.PhotoName)
+                <input type="hidden" name="page" value="1" />
             }
         </div>
         <div class="row col-md-12">
@@ -54,7 +61,7 @@
     <br />
     <div class="row col-md-12">
         <div class="btn-group">
-            @if (ViewBag.PhotoName == null || ViewBag.PhotoName == string.Empty)
+            @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
             {
                 @Html.PageLinks(Model.PageInfo, x => Url.Action("Photos",
                new
@@ -114,7 +121,7 @@
                     Who rated
                 </div>
                 <div class="dropdown-menu">
-                    @Html.UsersWhoRated(currentPhotoRatings, x => Url.Action("Index", new { id = x }))
+                    @Html.UsersWhoRated(currentPhotoRatings, x => Url.Action("Index", "Home", new { id = x }))
                 </div>
             </div>
         </div>
@@ -125,7 +132,16 @@
                     Rate this photo
                 </div>
                 <div class="dropdown-menu">
-                    @Html.StarsMenu(5, x => Url.Action("Rate", new { userName = chosenUserName, page = page, photoId = photo.Id, rating = x }))
+                    @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+                    {
+                        @Html.StarsMenu(5, x => Url.Action("Rate", "Rating", 
+                       new { userName = chosenUserName, page = page, photoId = photo.Id, rating = x }))
+                    }
+                    else
+                    {
+                        @Html.StarsMenu(5, x => Url.Action("Rate", "Rating",
+                       new { userName = chosenUserName, page = page, photoId = photo.Id, photoName = ViewBag.PhotoName, rating = x }))
+                    }
                 </div>
             </div>
         </div>
@@ -139,10 +155,21 @@
                 <div>
                     <span class="glyphicon glyphicon-ok"></span>
                     My rate: @ratingOfCurrentUser |
-                    <a href="@Url.Action("RemoveRate", new { userName = chosenUserName, page = page, photoId = photo.Id })">
-                        <span class="glyphicon glyphicon-trash"></span>
-                        Remove rate
-                    </a>
+                    @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+                    {
+                        <a href="@Url.Action("RemoveRate", "Rating", new { userName = chosenUserName, page = page, photoId = photo.Id })">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Remove rate
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("RemoveRate", "Rating", 
+                                new { userName = chosenUserName, page = page, photoId = photo.Id, photoName = ViewBag.PhotoName })">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Remove rate
+                        </a>
+                    }
                 </div>
             }
         </div>
@@ -150,8 +177,18 @@
     if (User.Identity.Name == chosenUserName)
     {
         <div class="form-group">
-            @Html.ActionLink("Edit info", "EditPhoto", new { id = photo.Id, page = page }) |
-            @Html.ActionLink("Delete", "DeletePhoto", new { id = photo.Id, page = page })
+            @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+            {
+                @Html.ActionLink("Edit info", "EditPhoto", new { id = photo.Id, page = page })
+                <span>|</span>
+                @Html.ActionLink("Delete", "DeletePhoto", new { id = photo.Id, page = page })
+            }
+            else
+            {
+                @Html.ActionLink("Edit info", "EditPhoto", new { id = photo.Id, page = page, photoName = ViewBag.PhotoName })
+                <span>|</span>
+                @Html.ActionLink("Delete", "DeletePhoto", new { id = photo.Id, page = page, photoName = ViewBag.PhotoName })
+            }
         </div>
     }
 }
@@ -164,7 +201,7 @@
         {
             <div class="col-md-3">
                 <div class="col-md-5">
-                    @if (ViewBag.PhotoName == null || ViewBag.PhotoName == string.Empty)
+                    @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
                     {
                         <a href="@Url.Action("Photos", new { userName = chosenUserName, page = page, currentPhotoId = photo.Id })">
                             <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />

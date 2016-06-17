@@ -1,12 +1,14 @@
 ﻿using MvcProject.Models;
 using BLL.Interfaces.Entities;
 
-namespace MvcProject.Mappers
+namespace MvcProject.Infrastructure.Mappers
 {
     public static class MvcUserMappers
     {
         public static UserViewModel ToMvcUser(this UserEntity userEntity)
         {
+            if (userEntity == null) return null;
+
             return new UserViewModel()
             {
                 Id = userEntity.Id,
@@ -20,6 +22,8 @@ namespace MvcProject.Mappers
 
         public static UserEntity ToBllUser(this UserViewModel mvcUser)
         {
+            if (mvcUser == null) return null;
+
             return new UserEntity()
             {
                 Id = mvcUser.Id,

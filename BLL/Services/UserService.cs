@@ -37,12 +37,12 @@ namespace BLL.Services
 
         public UserEntity GetEntity(int id)
         {
-            return repository.GetById(id)?.ToBllUser();
+            return repository.GetById(id).ToBllUser();
         }
 
         public UserEntity GetUserEntityByLogin(string login)
         {
-            return repository.GetByLogin(login)?.ToBllUser();
+            return repository.GetByLogin(login).ToBllUser();
         }
 
         public void UpdateEntity(UserEntity user)

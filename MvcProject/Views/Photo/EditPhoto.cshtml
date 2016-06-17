@@ -7,7 +7,7 @@
 <h2>Edit photo</h2>
 <h5>
     @Html.ActionLink("Back to photos", "Photos", 
-    new { userName = User.Identity.Name, page = ViewBag.CurrentPage, currentPhotoId = Model.Id })
+    new { userName = User.Identity.Name, page = ViewBag.CurrentPage, currentPhotoId = Model.Id, photoName = ViewBag.PhotoName })
 </h5>
 <hr />
 
@@ -20,6 +20,7 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.Id)
             @Html.Hidden("page", (int?)ViewBag.CurrentPage)
+            @Html.Hidden("photoName", (string)ViewBag.PhotoName)
 
             <div class="form-group">
                 <div class="col-md-3">

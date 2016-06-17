@@ -32,7 +32,7 @@ namespace BLL.Services
 
         public PhotoEntity GetEntity(int id)
         {
-            return repository.GetById(id)?.ToBllPhoto();
+            return repository.GetById(id).ToBllPhoto();
         }
 
         public IEnumerable<PhotoEntity> GetUserPhotos(int userId)

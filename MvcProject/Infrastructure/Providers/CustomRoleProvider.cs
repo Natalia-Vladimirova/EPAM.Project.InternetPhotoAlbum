@@ -5,7 +5,7 @@ using System.Web.Security;
 using BLL.Interfaces.Entities;
 using BLL.Interfaces.Services;
 
-namespace MvcProject.Providers
+namespace MvcProject.Infrastructure.Providers
 {
     public class CustomRoleProvider : RoleProvider
     {

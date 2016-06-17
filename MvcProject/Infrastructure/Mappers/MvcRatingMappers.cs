@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using MvcProject.Models;
+﻿using MvcProject.Models;
 using BLL.Interfaces.Entities;
 
-namespace MvcProject.Mappers
+namespace MvcProject.Infrastructure.Mappers
 {
     public static class MvcRatingMappers
     {
         public static RatingViewModel ToMvcRating(this RatingEntity ratingEntity)
         {
+            if (ratingEntity == null) return null;
+
             return new RatingViewModel()
             {
                 Id = ratingEntity.Id,
@@ -22,6 +20,8 @@ namespace MvcProject.Mappers
 
         public static RatingEntity ToBllRating(this RatingViewModel mvcRating)
         {
+            if (mvcRating == null) return null;
+
             return new RatingEntity()
             {
                 Id = mvcRating.Id,

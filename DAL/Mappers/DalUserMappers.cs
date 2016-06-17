@@ -7,6 +7,8 @@ namespace DAL.Mappers
     {
         public static User ToOrmUser(this DalUser dalUser)
         {
+            if (dalUser == null) return null;
+
             return new User()
             {
                 Id = dalUser.Id,
@@ -21,6 +23,8 @@ namespace DAL.Mappers
 
         public static DalUser ToDalUser(this User user)
         {
+            if (user == null) return null;
+
             return new DalUser()
             {
                 Id = user.Id,
