@@ -60,7 +60,11 @@ namespace DAL.Repositories
             {
                 return GetAll();
             }
-            return context.Set<User>().Where(u => u.FirstName.Contains(firstName)).ToList().Select(u => u.ToDalUser());
+            firstName = firstName.Trim();
+            return context.Set<User>()
+                .Where(u => u.FirstName.Contains(firstName))
+                .AsEnumerable()
+                .Select(u => u.ToDalUser());
         }
 
         public IEnumerable<DalUser> GetUsersByLastName(string lastName)
@@ -69,7 +73,11 @@ namespace DAL.Repositories
             {
                 return GetAll();
             }
-            return context.Set<User>().Where(u => u.LastName.Contains(lastName)).ToList().Select(u => u.ToDalUser());
+            lastName = lastName.Trim();
+            return context.Set<User>()
+                .Where(u => u.LastName.Contains(lastName))
+                .AsEnumerable()
+                .Select(u => u.ToDalUser());
         }
 
         public void Update(DalUser dalUser)

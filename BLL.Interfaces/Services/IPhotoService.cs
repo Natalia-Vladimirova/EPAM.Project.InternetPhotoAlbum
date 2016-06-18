@@ -6,5 +6,6 @@ namespace BLL.Interfaces.Services
     public interface IPhotoService : IService<PhotoEntity>
     {
         IEnumerable<PhotoEntity> GetUserPhotos(int userId);
+        IEnumerable<PhotoEntity> GetUserPhotosByName(int userId, string photoName);
     }
 }

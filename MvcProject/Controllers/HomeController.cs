@@ -14,10 +14,12 @@ namespace MvcProject.Controllers
     public class HomeController : Controller
     {
         private readonly IUserService userService;
+        private readonly IPhotoService photoService;
 
-        public HomeController(IUserService userService)
+        public HomeController(IUserService userService, IPhotoService photoService)
         {
             this.userService = userService;
+            this.photoService = photoService;
         }
 
         public ActionResult Index(int id = 0)
@@ -28,6 +30,8 @@ namespace MvcProject.Controllers
             {
                 user = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
             }
+            int lastPhotosCount = 6;
+            ViewBag.LastPhotos = photoService.GetUserPhotos(user.Id).Take(lastPhotosCount).Select(ph => ph.ToMvcPhoto());
             return View(user);
         }
 

@@ -89,7 +89,7 @@
     {
         <div class="row form-group">
             <div class="col-md-6">
-                <img class="big-user-photo" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.CurrentPhoto.Image)" />
+                <img class="big-photo" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.CurrentPhoto.Image)" />
             </div>
             <div class="col-md-6 form-horizontal">
                 @BigPhotoDescription(Model.CurrentPhoto, Model.CurrentPhotoRatings, Model.ChosenUser.UserName, 
@@ -204,13 +204,13 @@
                     @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
                     {
                         <a href="@Url.Action("Photos", new { userName = chosenUserName, page = page, currentPhotoId = photo.Id })">
-                            <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                            <img class="photo-in-list" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
                         </a>
                     }
                     else
                     {
                         <a href="@Url.Action("SearchPhotos", new { userName = chosenUserName, page = page, currentPhotoId = photo.Id, photoName = ViewBag.PhotoName })">
-                            <img style="width:80px; height:80px;" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                            <img class="photo-in-list" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
                         </a>
                     }
                 </div>

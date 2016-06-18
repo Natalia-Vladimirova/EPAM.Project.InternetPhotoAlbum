@@ -57,7 +57,7 @@
             <div class="form-group">
                 @if (Model.UserPhoto != null)
                 {
-                    <img style="max-width:50%" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.UserPhoto)" />
+                    <img class="normal-photo" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.UserPhoto)" />
                 }
                 else
                 {

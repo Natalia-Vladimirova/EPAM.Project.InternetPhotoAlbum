@@ -38,7 +38,26 @@ namespace DAL.Repositories
         
         public IEnumerable<DalPhoto> GetUserPhotos(int userId)
         {
-            return context.Set<User>().FirstOrDefault(user => user.Id == userId)?.Photos.Select(photo => photo.ToDalPhoto());
+            return context.Set<Photo>()
+                .Where(ph => ph.UserId == userId)
+                .OrderByDescending(ph => ph.CreationDate)
+                .AsEnumerable()
+                .Select(ph => ph.ToDalPhoto());
+        }
+
+        public IEnumerable<DalPhoto> GetUserPhotosByName(int userId, string photoName)
+        {
+            if (string.IsNullOrWhiteSpace(photoName))
+            {
+                return GetUserPhotos(userId);
+            }
+            photoName = photoName.Trim();
+            return context.Set<Photo>()
+                .Where(ph => ph.UserId == userId)
+                .Where(ph => ph.Name.Contains(photoName))
+                .OrderByDescending(ph => ph.CreationDate)
+                .AsEnumerable()
+                .Select(ph => ph.ToDalPhoto());
         }
 
         public void Update(DalPhoto entity)

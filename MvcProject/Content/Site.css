@@ -25,8 +25,17 @@ textarea {
     max-width: 280px;
 }
 
-.big-user-photo {
+.big-photo {
     max-width: 100%;
+}
+
+.normal-photo {
+    max-width: 50%;
+}
+
+.photo-in-list {
+    width: 80px; 
+    height: 80px;
 }
 
 .name-overflow-cut {
@@ -43,4 +52,22 @@ textarea {
   color: #ffffff;
   background-color: #808080;
   border-color: #808080;
+}
+
+.last-photo {
+    height: 150px;
+}
+
+.last-photo-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+}
+
+.last-photo-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

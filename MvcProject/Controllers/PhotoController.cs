@@ -69,14 +69,9 @@ namespace MvcProject.Controllers
             {
                 user = currentUser;
             }
-
-            var photos = photoService.GetUserPhotos(user.Id)
-                .Where(ph => ph.Name.IndexOf(photoName?.Trim() ?? "", StringComparison.InvariantCultureIgnoreCase) >= 0)
-                .Select(ph => ph.ToMvcPhoto());
-
+            var photos = photoService.GetUserPhotosByName(user.Id, photoName).Select(ph => ph.ToMvcPhoto());
             var photosModel = GetCurrentPhotosModel(user, photos, currentUser.Id, currentPhotoId, page);
-
-            ViewBag.PhotoName = photoName ?? string.Empty;
+            ViewBag.PhotoName = photoName;
             return View("Photos", photosModel);
         }
 

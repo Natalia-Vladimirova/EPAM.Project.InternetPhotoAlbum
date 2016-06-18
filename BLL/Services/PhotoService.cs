@@ -40,6 +40,11 @@ namespace BLL.Services
             return repository.GetUserPhotos(userId).Select(photo => photo.ToBllPhoto());
         }
 
+        public IEnumerable<PhotoEntity> GetUserPhotosByName(int userId, string photoName)
+        {
+            return repository.GetUserPhotosByName(userId, photoName).Select(photo => photo.ToBllPhoto());
+        }
+
         public void UpdateEntity(PhotoEntity photo)
         {
             repository.Update(photo.ToDalPhoto());

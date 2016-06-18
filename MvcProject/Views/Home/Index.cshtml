@@ -54,4 +54,36 @@
             }
         </div>
     </div>
+    <br />
+    <hr class="col-md-12" />
+    <div class="row col-md-12 lead">
+        Last photos
+    </div>
+    @{var lastPhotos = ViewBag.LastPhotos as IEnumerable<MvcProject.Models.PhotoViewModel>;}
+    <div class="row">
+        @if (lastPhotos != null && lastPhotos.Count() != 0)
+        {
+            @LastPhotos(lastPhotos, Model.UserName)
+        }
+        else
+        {
+            <p class="text-muted text-center lead">No photos</p>
+        }
+    </div>
 </div>
+
+
+
+@helper LastPhotos(IEnumerable<MvcProject.Models.PhotoViewModel> photos, string userName)
+{
+    foreach(var photo in photos)
+    {
+        <div class="col-md-2 last-photo">
+            <div class="last-photo-wrapper">
+                <a href="@Url.Action("Photos", "Photo", new { userName = userName, page = 1, currentPhotoId = photo.Id })">
+                    <img class="last-photo-content" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                </a>
+            </div>
+        </div>
+    }
+}
