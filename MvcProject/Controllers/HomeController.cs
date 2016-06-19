@@ -7,6 +7,7 @@ using MvcProject.Infrastructure;
 using MvcProject.Infrastructure.Mappers;
 using MvcProject.Models;
 using BLL.Interfaces.Services;
+using System.Web.Security;
 
 namespace MvcProject.Controllers
 {
@@ -51,12 +52,7 @@ namespace MvcProject.Controllers
         public ActionResult UserSettings(UserViewModel viewModel, HttpPostedFileBase uploadImage, string removePhoto)
         {
             UserViewModel user = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
-
-            if (user == null)
-            {
-                return RedirectToAction("Index");
-            }
-
+            
             if (ModelState.IsValid)
             {
                 user.FirstName = viewModel.FirstName;
@@ -84,25 +80,45 @@ namespace MvcProject.Controllers
             return View(user);
         }
 
-        [HttpGet]
-        public ActionResult SearchUsers()
+        public ActionResult SearchUsers(string firstName, string lastName, int page = 1)
         {
-            return View();
-        }
+            IEnumerable<UserViewModel> foundUsers;
 
-        [HttpPost]
-        public ActionResult SearchUsers(string firstName, string lastName)
-        {
-            var usersByFirstName = userService.GetUserEntitiesByFirstName(firstName).Select(u => u.ToMvcUser());
-            var usersByLastName = userService.GetUserEntitiesByLastName(lastName).Select(u => u.ToMvcUser());
+            if (string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
+            {
+                foundUsers = userService.GetAllUserEntities()
+                    .Select(u => u.ToMvcUser())
+                    .Where(u => u.UserName != User.Identity.Name);
+            }
+            else
+            {
+                var usersByFirstName = userService.GetUserEntitiesByFirstName(firstName).Select(u => u.ToMvcUser());
+                var usersByLastName = userService.GetUserEntitiesByLastName(lastName).Select(u => u.ToMvcUser());
 
-            IEnumerable<UserViewModel> foundUsers = usersByFirstName
-                .Intersect(usersByLastName, new UserIdComparer())
-                .Where(u => u.UserName != User.Identity.Name);
+                foundUsers = usersByFirstName
+                    .Intersect(usersByLastName, new UserIdComparer())
+                    .Where(u => u.UserName != User.Identity.Name);
+            }
+
+            int pageSize = 4;
+            var usersPerCurrentPage = foundUsers.Skip((page - 1) * pageSize).Take(pageSize);
+
+            PageInfo pageInfo = new PageInfo
+            {
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalItems = foundUsers.Count()
+            };
+
+            UsersViewModel viewModel = new UsersViewModel
+            {
+                Users = usersPerCurrentPage,
+                PageInfo = pageInfo
+            };
 
             ViewBag.FirstName = firstName;
             ViewBag.LastName = lastName;
-            return View(foundUsers);
+            return View(viewModel);
         }
 
     }

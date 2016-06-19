@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MvcProject.Models.UserViewModel>
+﻿@using MvcProject.Infrastructure.Helpers
+@model MvcProject.Models.UsersViewModel
 
 @{
     ViewBag.Title = "Edit users";
@@ -8,8 +9,13 @@
 <h5>@Html.ActionLink("Back to profile", "Index/", "Home")</h5>
 <hr />
 
+<div class="row col-md-12">
+    @Html.PageLinks(Model.PageInfo, x => Url.Action("UsersEdit", new { page = x }))
+    <br />
+    <br />
+</div>
 <div>
-    @ShowUsers(Model)
+    @ShowUsers(Model.Users)
 </div>
 
 @helper ShowUsers(IEnumerable<MvcProject.Models.UserViewModel> users)

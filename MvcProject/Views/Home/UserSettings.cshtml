@@ -5,7 +5,10 @@
 }
 
 <h2>Settings</h2>
-<h5>@Html.ActionLink("Cancel", "Index")</h5>
+<h5>
+    @Html.ActionLink("Cancel", "Index") |
+    @Html.ActionLink("Change password", "ChangePassword", "Account")
+</h5>
 <hr class="col-md-12" />
 
 @using (Html.BeginForm("UserSettings", "Home", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "row form-horizontal" }))

@@ -53,7 +53,17 @@ namespace DAL.Repositories
         {
             return context.Set<User>().FirstOrDefault(user => user.Login == login).ToDalUser();
         }
-        
+
+        public void ChangeUserPassword(string login, string password)
+        {
+            User user = context.Set<User>().FirstOrDefault(u => u.Login == login);
+
+            if (user != null)
+            {
+                user.Password = password;
+            }
+        }
+
         public IEnumerable<DalUser> GetUsersByFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName))

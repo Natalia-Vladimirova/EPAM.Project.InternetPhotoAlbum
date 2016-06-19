@@ -8,11 +8,11 @@ namespace MvcProject.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserService userSerivce;
+        private readonly IUserService userService;
 
         public AccountController(IUserService userSerivce)
         {
-            this.userSerivce = userSerivce;
+            this.userService = userSerivce;
         }
 
         [HttpGet]
@@ -25,7 +25,7 @@ namespace MvcProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel viewModel)
         {
-            var user = userSerivce.GetUserEntityByLogin(viewModel.Login);
+            var user = userService.GetUserEntityByLogin(viewModel.Login);
 
             if (user != null)
             {
@@ -40,11 +40,11 @@ namespace MvcProject.Controllers
 
                 if (membershipUser != null)
                 {
-                    var userEnitity = userSerivce.GetUserEntityByLogin(viewModel.Login);
+                    var userEnitity = userService.GetUserEntityByLogin(viewModel.Login);
                     userEnitity.FirstName = viewModel.FirstName;
                     userEnitity.LastName = viewModel.LastName;
                     userEnitity.DateOfBirth = viewModel.DateOfBirth;
-                    userSerivce.UpdateEntity(userEnitity);
+                    userService.UpdateEntity(userEnitity);
 
                     FormsAuthentication.SetAuthCookie(viewModel.Login, false);
 
@@ -99,6 +99,32 @@ namespace MvcProject.Controllers
         {
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "Account");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(PasswordViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                bool passwordIsChanged = ((CustomMembershipProvider)Membership.Provider)
+                    .ChangePassword(User.Identity.Name, viewModel.OldPassword, viewModel.NewPassword);
+
+                if (passwordIsChanged)
+                {
+                    return RedirectToAction("UserSettings", "Home");
+                }
+                ModelState.AddModelError("OldPassword", "Incorrect password.");
+            }
+            return View(viewModel);
         }
 
     }

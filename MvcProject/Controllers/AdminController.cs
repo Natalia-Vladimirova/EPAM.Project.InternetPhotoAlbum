@@ -20,12 +20,29 @@ namespace MvcProject.Controllers
             this.roleService = roleService;
         }
 
-        public ActionResult UsersEdit()
+        public ActionResult UsersEdit(int page = 1)
         {
             IEnumerable<UserViewModel> allUsers = userService.GetAllUserEntities().Select(u => u.ToMvcUser());
             IEnumerable<UserViewModel> admins = roleService.GetUserEntitiesInRole("admin").Select(u => u.ToMvcUser());
             IEnumerable<UserViewModel> users = allUsers.Except(admins, new UserIdComparer());
-            return View(users);
+
+            int pageSize = 4;
+            var usersPerCurrentPage = users.Skip((page - 1) * pageSize).Take(pageSize);
+
+            PageInfo pageInfo = new PageInfo
+            {
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalItems = users.Count()
+            };
+
+            UsersViewModel viewModel = new UsersViewModel
+            {
+                Users = usersPerCurrentPage,
+                PageInfo = pageInfo
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet]

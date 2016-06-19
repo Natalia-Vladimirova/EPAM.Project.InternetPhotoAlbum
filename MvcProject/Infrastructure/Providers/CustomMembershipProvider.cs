@@ -64,6 +64,18 @@ namespace MvcProject.Infrastructure.Providers
             return memberUser;
         }
 
+        public override bool ChangePassword(string login, string oldPassword, string newPassword)
+        {
+            var user = UserService.GetUserEntityByLogin(login);
+
+            if (user == null || !Crypto.VerifyHashedPassword(user.Password, oldPassword))
+            {
+                return false;
+            }
+            UserService.ChangeUserPassword(login, Crypto.HashPassword(newPassword));
+            return true;
+        }
+
         #region Stabs
         public override MembershipUser CreateUser(string username, string password, string email,
             string passwordQuestion,
@@ -79,11 +91,6 @@ namespace MvcProject.Infrastructure.Providers
         }
 
         public override string GetPassword(string username, string answer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool ChangePassword(string username, string oldPassword, string newPassword)
         {
             throw new NotImplementedException();
         }

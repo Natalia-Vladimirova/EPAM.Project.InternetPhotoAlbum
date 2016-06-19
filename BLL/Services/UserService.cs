@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BLL.Interfaces.Entities;
 using BLL.Interfaces.Services;
@@ -59,6 +60,12 @@ namespace BLL.Services
         public IEnumerable<UserEntity> GetUserEntitiesByLastName(string lastName)
         {
             return repository.GetUsersByLastName(lastName).Select(u => u.ToBllUser());
+        }
+
+        public void ChangeUserPassword(string login, string password)
+        {
+            repository.ChangeUserPassword(login, password);
+            uow.Commit();
         }
     }
 }
