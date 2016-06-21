@@ -1,0 +1,162 @@
+﻿@using MvcProject.Infrastructure.Helpers
+@model MvcProject.Models.PhotosViewModel
+
+<div class="row col-md-12 form-horizontal">
+    <div class="row col-md-12 form-group">
+        @PhotosList(Model.Photos, Model.ChosenUser.UserName, Model.PageInfo?.PageNumber ?? 0)
+    </div>
+    <br />
+    <div class="row col-md-12">
+        <div class="btn-group">
+            @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+            {
+                @Html.PageLinks(Model.PageInfo, "photosChanges", "loadingPhotos", x => Url.Action("Photos",
+               new
+               {
+                   userName = Model.ChosenUser.UserName,
+                   page = x,
+                   currentPhotoId = Model.CurrentPhoto?.Id ?? 0,
+               }))
+            }
+            else
+            {
+                @Html.PageLinks(Model.PageInfo, "photosChanges", "loadingPhotos", x => Url.Action("SearchPhotos",
+               new
+               {
+                   userName = Model.ChosenUser.UserName,
+                   page = x,
+                   currentPhotoId = Model.CurrentPhoto?.Id ?? 0,
+                   photoName = ViewBag.PhotoName
+               }))
+            }
+        </div>
+    </div>
+    <br />
+    @if (Model.CurrentPhoto != null)
+    {
+        <div class="row form-group">
+            <div class="col-md-6">
+                <img class="big-photo" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.CurrentPhoto.Image)" />
+            </div>
+            <div class="col-md-6 form-horizontal">
+                @BigPhotoDescription(Model.CurrentPhoto, Model.CurrentPhotoRatings, Model.ChosenUser.UserName, 
+               Model.RatingOfCurrentUser, Model.PageInfo.PageNumber)
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@helper BigPhotoDescription(MvcProject.Models.PhotoViewModel photo, IEnumerable<MvcProject.Models.RatingViewModel> currentPhotoRatings,
+    string chosenUserName, int? ratingOfCurrentUser, int page)
+{
+    <div class="form-group">
+        <h3>@photo.Name</h3>
+    </div>
+    <div class="form-group">
+        <p>@photo.Description</p>
+    </div>
+    if (User.Identity.Name == chosenUserName)
+    {
+        <div class="form-group">
+            @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+            {
+                @Html.ActionLink("Edit info", "EditPhoto", new { id = photo.Id, page = page })
+                <span>|</span>
+                @Html.ActionLink("Delete photo", "DeletePhoto", new { id = photo.Id, page = page })
+            }
+            else
+            {
+                @Html.ActionLink("Edit info", "EditPhoto", new { id = photo.Id, page = page, photoName = ViewBag.PhotoName })
+                <span>|</span>
+                @Html.ActionLink("Delete photo", "DeletePhoto", new { id = photo.Id, page = page, photoName = ViewBag.PhotoName })
+            }
+        </div>
+    }
+    <div class="form-group">
+        <label class="control-label">Total rate: @photo.TotalRate</label>
+    </div>
+    <div class="form-group">
+        <div class="form-group col-md-3">
+            @Html.UsersWhoRatedMenu(currentPhotoRatings, x => Url.Action("Index", "Home", new { id = x }))
+        </div>
+
+        <div class="form-group col-md-4">
+            @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+            {
+                @Html.StarsMenu(5, "photosChanges", "loadingPhotos", x => Url.Action("Rate", "Rating",
+               new { userName = chosenUserName, page = page, photoId = photo.Id, rating = x }))
+            }
+            else
+            {
+                @Html.StarsMenu(5, "photosChanges", "loadingPhotos", x => Url.Action("Rate", "Rating",
+               new { userName = chosenUserName, page = page, photoId = photo.Id, photoName = ViewBag.PhotoName, rating = x }))
+            }
+        </div>
+
+        <div class="form-group col-md-5">
+            @if (ratingOfCurrentUser == null)
+            {
+                <p class="text-muted">My rate: no rating</p>
+            }
+            else
+            {
+                <div>
+                    <span class="glyphicon glyphicon-ok"></span>
+                    My rate: @ratingOfCurrentUser |
+                    @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+                    {
+                        <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#photosChanges" data-ajax-loading="#loadingPhotos"
+                           href="@Url.Action("RemoveRate", "Rating", new { userName = chosenUserName, page = page, photoId = photo.Id })">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Remove rate
+                        </a>
+                    }
+                    else
+                    {
+                        <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#photosChanges" data-ajax-loading="#loadingPhotos"
+                           href="@Url.Action("RemoveRate", "Rating", 
+                                new { userName = chosenUserName, page = page, photoId = photo.Id, photoName = ViewBag.PhotoName })">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Remove rate
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@helper PhotosList(IEnumerable<MvcProject.Models.PhotoViewModel> photos, string chosenUserName, int page)
+{
+    if (photos != null)
+    {
+        foreach (var photo in photos)
+        {
+            <div class="col-md-3">
+                <div class="col-md-5">
+                    @if (string.IsNullOrWhiteSpace(ViewBag.PhotoName))
+                    {
+                        <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#photosChanges" data-ajax-loading="#loadingPhotos" 
+                           href="@Url.Action("Photos", new { userName = chosenUserName, page = page, currentPhotoId = photo.Id })">
+                            <img class="photo-in-list" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                        </a>
+                    }
+                    else
+                    {
+                        <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#photosChanges" data-ajax-loading="#loadingPhotos" 
+                           href="@Url.Action("SearchPhotos", new { userName = chosenUserName, page = page, currentPhotoId = photo.Id, photoName = ViewBag.PhotoName })">
+                            <img class="photo-in-list" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                        </a>
+                    }
+                </div>
+                <div class="col-md-7 name-overflow-cut">
+                    <h4>@photo.Name</h4>
+                    <p>Total rate: @photo.TotalRate</p>
+                </div>
+            </div>
+        }
+    }
+}
+

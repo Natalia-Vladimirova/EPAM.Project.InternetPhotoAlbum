@@ -175,13 +175,15 @@
     <Compile Include="Infrastructure\Providers\CustomRoleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app-flower.png" />
     <Content Include="App_Data\InetPhotoAlbumDb.mdf" />
     <Content Include="App_Data\InetPhotoAlbumDb_log.ldf">
       <DependentUpon>InetPhotoAlbumDb.mdf</DependentUpon>
     </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="favicon.ico" />
+    <Content Include="Content\loader.gif" />
+    <Content Include="Content\nophoto.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -191,6 +193,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -225,6 +229,9 @@
     <Content Include="Views\Home\SearchUsers.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Shared\_FoundUsers.cshtml" />
+    <Content Include="Views\Shared\_PhotosChanges.cshtml" />
+    <Content Include="Views\Shared\_UsersEdit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

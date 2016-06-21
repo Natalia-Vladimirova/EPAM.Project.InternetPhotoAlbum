@@ -7,7 +7,7 @@ namespace MvcProject.Infrastructure.Helpers
 {
     public static class PagingHelpers
     {
-        public static MvcHtmlString PageLinks(this HtmlHelper html, PageInfo pageInfo, Func<int, string> pageUrl)
+        public static MvcHtmlString PageLinks(this HtmlHelper html, PageInfo pageInfo, string updateTargetId, string loadingElementId, Func<int, string> pageUrl)
         {
             if (pageInfo == null || pageUrl == null) { return null; }
 
@@ -16,6 +16,10 @@ namespace MvcProject.Infrastructure.Helpers
             {
                 TagBuilder btn = new TagBuilder("a");
                 btn.MergeAttribute("href", pageUrl(i));
+                btn.MergeAttribute("data-ajax", "true");
+                btn.MergeAttribute("data-ajax-update", "#" + updateTargetId);
+                btn.MergeAttribute("data-ajax-loading", "#" + loadingElementId);
+                btn.MergeAttribute("data-ajax-mode", "replace");
                 btn.InnerHtml = i.ToString();
 
                 if (i == pageInfo.PageNumber)

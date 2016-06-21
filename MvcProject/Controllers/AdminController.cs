@@ -29,6 +29,11 @@ namespace MvcProject.Controllers
             int pageSize = 4;
             var usersPerCurrentPage = users.Skip((page - 1) * pageSize).Take(pageSize);
 
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_UsersEdit", usersPerCurrentPage);
+            }
+
             PageInfo pageInfo = new PageInfo
             {
                 PageNumber = page,

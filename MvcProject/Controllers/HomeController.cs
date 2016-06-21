@@ -7,7 +7,6 @@ using MvcProject.Infrastructure;
 using MvcProject.Infrastructure.Mappers;
 using MvcProject.Models;
 using BLL.Interfaces.Services;
-using System.Web.Security;
 
 namespace MvcProject.Controllers
 {
@@ -118,6 +117,12 @@ namespace MvcProject.Controllers
 
             ViewBag.FirstName = firstName;
             ViewBag.LastName = lastName;
+
+            if(Request.IsAjaxRequest())
+            {
+                return PartialView("_FoundUsers", viewModel);
+            }
+
             return View(viewModel);
         }
 

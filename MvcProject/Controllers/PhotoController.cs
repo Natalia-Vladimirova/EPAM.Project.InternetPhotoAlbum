@@ -52,6 +52,12 @@ namespace MvcProject.Controllers
             }
             var photos = photoService.GetUserPhotos(user.Id).Select(ph => ph.ToMvcPhoto());
             var photosModel = GetCurrentPhotosModel(user, photos, currentUser.Id, currentPhotoId, page);
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_PhotosChanges", photosModel);
+            }
+
             return View(photosModel);
         }
 
@@ -72,6 +78,12 @@ namespace MvcProject.Controllers
             var photos = photoService.GetUserPhotosByName(user.Id, photoName).Select(ph => ph.ToMvcPhoto());
             var photosModel = GetCurrentPhotosModel(user, photos, currentUser.Id, currentPhotoId, page);
             ViewBag.PhotoName = photoName;
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_PhotosChanges", photosModel);
+            }
+
             return View("Photos", photosModel);
         }
 
