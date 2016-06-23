@@ -182,8 +182,11 @@
     </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\error.png" />
     <Content Include="Content\loader.gif" />
+    <Content Include="Content\no-selected-photo.png" />
     <Content Include="Content\nophoto.png" />
+    <Content Include="Content\notfound.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -199,6 +202,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\live-search.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -217,7 +221,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\UserSettings.cshtml" />
     <Content Include="Views\Photo\Photos.cshtml" />
     <Content Include="Views\Photo\AddPhoto.cshtml" />
@@ -232,6 +235,9 @@
     <Content Include="Views\Shared\_FoundUsers.cshtml" />
     <Content Include="Views\Shared\_PhotosChanges.cshtml" />
     <Content Include="Views\Shared\_UsersEdit.cshtml" />
+    <Content Include="Views\Account\DeleteAccount.cshtml" />
+    <Content Include="Views\Shared\_PhotosList.cshtml" />
+    <Content Include="Views\Shared\_LayoutError.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

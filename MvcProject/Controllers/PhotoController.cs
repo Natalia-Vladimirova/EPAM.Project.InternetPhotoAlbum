@@ -87,6 +87,43 @@ namespace MvcProject.Controllers
             return View("Photos", photosModel);
         }
 
+        public ActionResult SearchPhotosAjax(string photoName, string userName)
+        {
+            UserViewModel user = null;
+
+            if (userName != null)
+            {
+                user = userService.GetUserEntityByLogin(userName).ToMvcUser();
+            }
+
+            if (user == null)
+            {
+                user = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
+            }
+
+            int pageSize = 4;
+            var photos = photoService.GetUserPhotosByName(user.Id, photoName).Select(ph => ph.ToMvcPhoto());
+            var photosPerCurrentPage = photos.Take(pageSize);
+
+            PageInfo pageInfo = new PageInfo
+            {
+                PageNumber = 1,
+                PageSize = pageSize,
+                TotalItems = photos.Count()
+            };
+
+            var photosModel = new PhotosViewModel
+            {
+                ChosenUser = user,
+                Photos = photosPerCurrentPage,
+                PageInfo = pageInfo
+            };
+
+            ViewBag.PhotoName = photoName;
+
+            return PartialView("_PhotosList", photosModel);
+        }
+        
         [HttpGet]
         public ActionResult AddPhoto(string photoName, int page = 1)
         {

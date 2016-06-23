@@ -33,19 +33,18 @@
         <br />
         <div class="row col-md-12 form-inline">
             @using (Ajax.BeginForm("SearchPhotos", "Photo",
-                new AjaxOptions {
+                new AjaxOptions
+                {
                     UpdateTargetId = "photosChanges",
                     LoadingElementId = "loadingPhotos",
                     InsertionMode = InsertionMode.Replace,
                     HttpMethod = "post"
                 }))
             {
-                <div class="form-group">
-                    <input type="text" class="form-control" name="photoName" value="@ViewBag.PhotoName" placeholder="Enter photo name ..." />
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-default" value="Search" />
-                </div>
+                <input type="text" id="liveSearch" class="form-control" name="photoName" value="@ViewBag.PhotoName" placeholder="Enter photo name ..." />
+                <button type="submit" class="btn btn-gray">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
                 @Html.HiddenFor(model => model.ChosenUser.UserName, new { @id = "userName", @Name = "userName" })
                 @Html.HiddenFor(model => model.CurrentPhoto.Id, new { @id = "currentPhotoId", @Name = "currentPhotoId" })
                 <input type="hidden" name="page" value="1" />
@@ -71,7 +70,7 @@
     </div>
 </div>
 
-<hr class="col-md-12" />
+<hr />
 
 <div id="photosChanges">
     @Html.Partial("_PhotosChanges", Model)
@@ -81,4 +80,5 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/live-search.js")
 }

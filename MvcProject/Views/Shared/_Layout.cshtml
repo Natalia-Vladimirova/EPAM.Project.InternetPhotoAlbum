@@ -20,27 +20,73 @@
                 </button>
                 @if (Request.IsAuthenticated)
                 {
-                    @Html.ActionLink("My profile", "Index/", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    <a href="@Url.Action("Index/", "Home")" class="navbar-brand">
+                        <span class="glyphicon glyphicon-home"></span>
+                        My profile
+                    </a>
                 }
                 else
                 {
-                    @Html.ActionLink("Photo Album", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                        <span class="glyphicon glyphicon-camera"></span>
+                        Photo Album
+                    </a>
                 }
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @Html.Partial("_LoginPartial")
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>
+                            <a href="@Url.Action("Photos/", "Photo")">
+                                <span class="glyphicon glyphicon-picture"></span>
+                                My photos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("SearchUsers", "Home")">
+                                <span class="glyphicon glyphicon-search"></span>
+                                Users
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>
+                            <a href="@Url.Action("Logout", "Account")">
+                                <span class="glyphicon glyphicon-log-out"></span>
+                                Exit
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="@Url.Action("Register", "Account")">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Register
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Login", "Account")">
+                                <span class="glyphicon glyphicon-log-in"></span>
+                                Sign in
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
     </div>
     <div class="container body-content">
-        <div class="row col-md-12">
+        <div class="row container">
             @RenderBody()
         </div>
         <br />
         <hr />
-        <div class="row col-md-12 text-center container">
+        <div class="row text-center container">
             <footer>
                 <p>&copy; @DateTime.Now.Year – By NV</p>
             </footer>

@@ -1,0 +1,47 @@
+﻿@model MvcProject.Models.UserViewModel
+
+@{
+    ViewBag.Title = "Delete account";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<div class="form-horizontal">
+    <div class="col-md-7 form-horizontal">
+        <div class="form-group lead">
+            @Html.DisplayFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.LastName)
+        </div>
+
+        <div class="form-group">
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </div>
+
+        <div class="form-group text-warning">
+            <span class="text-danger lead">WARNING!</span>
+            If you delete your account, you will not be able to restore it.
+        </div>
+            
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <input type="submit" value="Delete account" class="btn btn-default" />
+                @Html.ActionLink("Cancel", "UserSettings", "Home", null, new { @class = "btn btn-default" })
+            </div>
+        }
+    </div>
+    <div class="col-md-5">
+        <div class="form-group">
+            @if (Model.UserPhoto != null)
+            {
+                <img class="normal-photo" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.UserPhoto)" />
+            }
+            else
+            {
+                <img class="normal-photo" src="/Content/nophoto.png" />
+            }
+        </div>
+    </div>
+</div>

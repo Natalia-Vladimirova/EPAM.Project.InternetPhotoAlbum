@@ -72,6 +72,16 @@ namespace MvcProject
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "404-catch-all",
+                url: "{*catchall}",
+                defaults: new
+                {
+                    Controller = "Error",
+                    Action = "NotFound"
+                }
+            );
         }
     }
 }

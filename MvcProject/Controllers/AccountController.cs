@@ -1,11 +1,13 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
+using MvcProject.Infrastructure.Mappers;
 using MvcProject.Infrastructure.Providers;
 using MvcProject.Models;
 using BLL.Interfaces.Services;
 
 namespace MvcProject.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly IUserService userService;
@@ -16,12 +18,14 @@ namespace MvcProject.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel viewModel)
         {
@@ -61,6 +65,7 @@ namespace MvcProject.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.returnUrl = returnUrl;
@@ -68,6 +73,7 @@ namespace MvcProject.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel viewModel, string returnUrl)
         {
@@ -94,22 +100,19 @@ namespace MvcProject.Controllers
             return View(viewModel);
         }
 
-        [Authorize]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login");
         }
 
         [HttpGet]
-        [Authorize]
         public ActionResult ChangePassword()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(PasswordViewModel viewModel)
         {
@@ -125,6 +128,23 @@ namespace MvcProject.Controllers
                 ModelState.AddModelError("OldPassword", "Incorrect password.");
             }
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public ActionResult DeleteAccount()
+        {
+            var user = userService.GetUserEntityByLogin(User.Identity.Name).ToMvcUser();
+            return View(user);
+        }
+
+        [HttpPost, ActionName("DeleteAccount")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteAccountConfirmed()
+        {
+            var user = userService.GetUserEntityByLogin(User.Identity.Name);
+            FormsAuthentication.SignOut();
+            userService.DeleteEntity(user);
+            return RedirectToAction("Login");
         }
 
     }
