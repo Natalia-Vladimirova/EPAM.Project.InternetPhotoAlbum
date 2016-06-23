@@ -45,8 +45,8 @@
                         <span class="glyphicon glyphicon-user"></span>
                         Edit users
                     </a>
+                    <br />
                 }
-                <br />
                 <a href="@Url.Action("UserSettings")">
                     <span class="glyphicon glyphicon-cog"></span>
                     Settings
@@ -63,7 +63,16 @@
     <div class="row">
         @if (lastPhotos != null && lastPhotos.Count() != 0)
         {
-            @LastPhotos(lastPhotos, Model.UserName)
+            foreach (var photo in lastPhotos)
+            {
+                <div class="col-md-2 last-photo">
+                    <div class="last-photo-wrapper">
+                        <a href="@Url.Action("Photos", "Photo", new { userName = Model.UserName, page = 1, currentPhotoId = photo.Id })">
+                            <img class="last-photo-content" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
+                        </a>
+                    </div>
+                </div>
+            }
         }
         else
         {
@@ -71,19 +80,3 @@
         }
     </div>
 </div>
-
-
-
-@helper LastPhotos(IEnumerable<MvcProject.Models.PhotoViewModel> photos, string userName)
-{
-    foreach(var photo in photos)
-    {
-        <div class="col-md-2 last-photo">
-            <div class="last-photo-wrapper">
-                <a href="@Url.Action("Photos", "Photo", new { userName = userName, page = 1, currentPhotoId = photo.Id })">
-                    <img class="last-photo-content" src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Image)" />
-                </a>
-            </div>
-        </div>
-    }
-}
